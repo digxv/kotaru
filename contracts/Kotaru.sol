@@ -18,7 +18,7 @@ contract Kotaru {
         string name,
         string ipfs_hash,
         uint256 price,
-        address payable author
+        address payable publisher
     );
 
     function publishObject(
@@ -32,20 +32,16 @@ contract Kotaru {
 
         objectCount++;
 
+        address payable publisher = payable(msg.sender);
+
         objects[objectCount] = Object(
             objectCount,
             _name,
             _ipfs_hash,
             _price,
-            msg.sender
+            publisher
         );
 
-        emit ObjectPublished(
-            objectCount,
-            _name,
-            _ipfs_hash,
-            _price,
-            msg.sender
-        );
+        emit ObjectPublished(objectCount, _name, _ipfs_hash, _price, publisher);
     }
 }
