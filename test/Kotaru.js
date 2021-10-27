@@ -10,10 +10,20 @@ describe("Kotaru contract", () => {
     });
 
     describe("Deployment", () => {
-        it("Should be deployed", async () => {
-            expect(kotaru.address).to.be.a("string");
+        it("deploys successfully", async () => {
+            const address = await kotaru.address;
+            expect(address).to.be.not.null;
+            expect(address).to.be.not.undefined;
+            expect(address).to.be.not.undefined;
+            expect(address).to.be.not.equal(0x0);
+            expect(address).to.be.a("string");
             expect(accounts).to.not.undefined;
             expect(accounts).to.be.length.above(0);
+        })
+
+        it("has a name", async() => {
+            const name = await kotaru.name();
+            expect(name).to.equal("Kotaru");
         })
     })
 
@@ -21,23 +31,26 @@ describe("Kotaru contract", () => {
         let tx, objectCount;
 
         before(async () => {
-            tx = await kotaru.publishObject("Object #1", "ipfs://xxxx", 0);
+            tx = await kotaru.publishObject("Object #1", "ipfs://xxxx", 0, {
+                from: accounts[0].address
+            });
             objectCount = await kotaru.objectCount();
         });
 
-        it("Should publish an object", async () => {
+        it("publish object", async () => {
             expect(tx.hash).to.be.a("string");
-            console.log(tx);
-            
-            // const { logs } = tx;
-            // assert.ok(Array.isArray(logs));
-            // assert.equal(objectCount, 1);
-            // const e = tx.logs[0].args;
-            // assert.equal(e.id.toNumber(), 1, "ID is correct");
-            // assert.equal(e.name, "Object #1", "name is correct");
-            // assert.equal(e.ipfs, "ipfs://xxxx", "IPFS URI is correct");
-            // assert.equal(e.price, 0, "price is correct")
-            // assert.equal(e.publisher, accounts[0].address, "publisher is correct");
+            expect(objectCount).equal(1);
+
+            const receipt = await tx.wait();
+            const logs = receipt.events[objectCount - 1].args;
+            expect(logs).to.be.an("array");
+            expect(logs).to.be.length.above(0);
+
+            expect(logs.id.toNumber()).is.equal(objectCount);
+            expect(logs.name).is.equal("Object #1");
+            expect(logs.ipfs_hash).is.equal("ipfs://xxxx");
+            expect(logs.price).is.equal(0);
+            expect(logs.publisher).is.equal(accounts[0].address);
         });
     })
 })
