@@ -10,6 +10,7 @@ contract Kotaru {
         string name;
         string ipfs_hash;
         uint256 price;
+        uint256 downloads;
         address payable publisher;
     }
 
@@ -18,6 +19,7 @@ contract Kotaru {
         string name,
         string ipfs_hash,
         uint256 price,
+        uint256 downloads,
         address payable publisher
     );
 
@@ -34,11 +36,14 @@ contract Kotaru {
 
         address payable publisher = payable(msg.sender);
 
+        uint downloads = 0;
+
         objects[objectCount] = Object(
             objectCount,
             _name,
             _ipfs_hash,
             _price,
+            downloads
             publisher
         );
 
