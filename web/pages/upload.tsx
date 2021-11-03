@@ -82,7 +82,6 @@ export default function Upload() {
     const finalMetaUpload = async (meta: any) => {
         let MetaString = JSON.stringify(meta);
         const { cid } = await ipfs.add(MetaString);
-        setUploading(false);
 
         axios.post("/api/pinFile", {
             hash: cid.string
@@ -94,6 +93,7 @@ export default function Upload() {
                     success: true,
                     id: cid.string
                 }); 
+                setUploading(false);
             }).catch(err => {
                 console.error(err)
             })
