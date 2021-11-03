@@ -59,6 +59,19 @@ export default function AppLayout ({ children, pageTitle }) {
         let _contract = new web3.eth.Contract(_contractjson.abi, "0x016693c0af859B175BA212e83fAa153e37115D18");
         setContract(_contract);
         console.log(_contract);
+
+        // objects count
+        let objects = [];
+        let objCount = await _contract.methods.objectCount().call()
+
+        for(let i = 0; i < objCount; i++) {
+            let object = await _contract.methods.objects(i).call();
+            if(object.publisher.toLowerCase() === walletState.address.toLowerCase()) {
+                objects.push(object)
+            }
+        }
+        
+        console.log(objects);
     }
 
     return (
