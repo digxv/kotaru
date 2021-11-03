@@ -4,17 +4,19 @@ import { WalletProvider } from "../utils/walletContext";
 import "@fontsource/inter";
 import "@fontsource/open-sans";
 import "../styles/globals.css";
-import { Web3Provider } from "../utils/web3Context";
+import { Web3Provider, ContractProvider } from "../utils/web3Context";
 
 function MyApp({ Component, pageProps }) {
   return (
     <div className="App">
       <ChakraProvider>
-        <Web3Provider>
-          <WalletProvider>
-            <Component {...pageProps} />
-          </WalletProvider>
-        </Web3Provider>
+      <Web3Provider>
+      <ContractProvider>
+      <WalletProvider>
+        <Component {...pageProps} />
+      </WalletProvider>
+      </ContractProvider>
+      </Web3Provider>
       </ChakraProvider>
     </div>
   );

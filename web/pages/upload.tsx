@@ -6,13 +6,15 @@ import CryptoJS from "crypto-js";
 import { WalletContext } from "../utils/walletContext";
 import ipfs from "../utils/ipfs";
 import { urlSource } from "ipfs-http-client";
-import { Web3Context } from "../utils/web3Context";
+import { ContractContext, Web3Context } from "../utils/web3Context";
 import axios from "axios";
+import Tx from "ethereumjs-tx";
 
 export default function Upload() {
 
     // web3 context
     const [web3Context, setWeb3Context]: any = useContext(Web3Context);
+    const [contract, setContract]: any = useContext(ContractContext);
     // wallet context
     const [walletState, setWalletState]: any = useContext(WalletContext);
     // form state
@@ -96,6 +98,10 @@ export default function Upload() {
 
     }
 
+    const publishObject = async () => {
+        const data = contract.methods.publishObject("hello #1", "ipfs://", 0).send({from: walletState.address});
+    }
+
     return (
         <AppLayout pageTitle="Sell — Kotaru">
             <Box
@@ -177,6 +183,23 @@ export default function Upload() {
                         </Button>
                     </>
                 }
+
+                <Button
+                    paddingTop="25px"
+                    paddingBottom="25px"
+                    marginTop="5"
+                    width="100%"
+                    backgroundColor="#000000"
+                    color="#ffffff"
+                    _hover={{ bg: "#000000" }}
+                    _active={{ bg: "#000000" }}
+                    _focus={{ bg: "#000000" }}
+                    onClick={() => {
+                        publishObject()
+                    }}
+                >
+                    Contract Call
+                </Button>
             </Box>
         </AppLayout>
     )
