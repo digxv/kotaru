@@ -41,6 +41,7 @@ export default function AppLayout ({ children, pageTitle }) {
     async function loadAccounts() {
         let accounts = await provider.request({method: "eth_requestAccounts"});
         web3 = new Web3(provider);
+        setWeb3Context(web3);
         setAccountAddress(accounts[0]);
         let bal = await web3.eth.getBalance(accounts[0]);
         let ethBal: any = await web3.utils.fromWei(bal, "ether");

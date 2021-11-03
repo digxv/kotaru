@@ -8,7 +8,6 @@ import ipfs from "../utils/ipfs";
 import { urlSource } from "ipfs-http-client";
 import { ContractContext, Web3Context } from "../utils/web3Context";
 import axios from "axios";
-import Tx from "ethereumjs-tx";
 
 export default function Upload() {
 
@@ -88,18 +87,25 @@ export default function Upload() {
         axios.post("/api/pinFile", {
             hash: cid.string
         }).then(result => {
-            setReady({
-                success: true,
-                id: cid.string
-            });            
+
+            publishObject(`ipfs://${cid.string}`, filename, price).then(res => {
+                console.log(res);
+                setReady({
+                    success: true,
+                    id: cid.string
+                }); 
+            }).catch(err => {
+                console.error(err)
+            })
+           
         }).catch(error => {
             console.error(error);
         });
 
     }
 
-    const publishObject = async () => {
-        const data = contract.methods.publishObject("hello #1", "ipfs://", 0).send({from: walletState.address});
+    const publishObject = async (ipfs_hash: string, name: string, price: number) => {
+        return contract.methods.publishObject(name, ipfs_hash, price).send({from: walletState.address});
     }
 
     return (
@@ -115,7 +121,7 @@ export default function Upload() {
                     ready.success
                     ?
                     <>
-                        <Text fontSize="xl">Your product is ready to be shared with the world! Just copy the link below and send over to your audience.</Text>
+                        <Text color="white" fontSize="xl">Your product is ready to be shared with the world! Just copy the link below and send over to your audience.</Text>
                         <br />
                         <Link href={`/f/${ready.id}`} target="_blank" ><Text color="white" letterSpacing="wider" fontWeight="bold" borderRadius="sm" padding="2" bg="blue.400" fontSize="xl">https://v1.kotaru.io/f/{ready.id}</Text></Link>
                     </>
@@ -183,23 +189,6 @@ export default function Upload() {
                         </Button>
                     </>
                 }
-
-                <Button
-                    paddingTop="25px"
-                    paddingBottom="25px"
-                    marginTop="5"
-                    width="100%"
-                    backgroundColor="#000000"
-                    color="#ffffff"
-                    _hover={{ bg: "#000000" }}
-                    _active={{ bg: "#000000" }}
-                    _focus={{ bg: "#000000" }}
-                    onClick={() => {
-                        publishObject()
-                    }}
-                >
-                    Contract Call
-                </Button>
             </Box>
         </AppLayout>
     )
