@@ -14,6 +14,12 @@ contract Kotaru {
         address payable publisher;
     }
 
+    struct Purchase {
+        uint256 id;
+        uint256 object_id;
+        address buyer;
+    }
+
     event ObjectPublished(
         uint256 id,
         string name,
@@ -21,6 +27,12 @@ contract Kotaru {
         uint256 price,
         uint256 downloads,
         address payable publisher
+    );
+
+    event ObjectBought(
+        uint256 id,
+        uint256 object_id,
+        address buyer
     );
 
     function publishObject(
@@ -43,20 +55,32 @@ contract Kotaru {
             _name,
             _ipfs_hash,
             _price,
-            downloads
+            downloads,
             publisher
         );
 
-        emit ObjectPublished(objectCount, _name, _ipfs_hash, _price, publisher);
+        emit ObjectPublished(objectCount, _name, _ipfs_hash, _price, downloads, publisher);
     }
 
     function buyObject(uint256 _id) public payable {
         require(_id > 0 && _id <= objectCount);
         Object memory _object = objects[_id];
-        require(msg.value = _object.price);
-        address payable _publisher = _object.publisher;
-        address(_publisher).transfer(msg.value);
+        address payable _publisher = payable(_object.publisher);
+
+        // address payable publisher = payable(msg.sender);
+        uint256 _price = _object.price;
+        // require(_price = msg.value);
+
+        _publisher.transfer(_price);
+
+        // update object
         _object.downloads = _object.downloads + 1;
-        objects[_id] = _object;   
+        objects[_id] = _object;
+
+        uint256 purchase_id = _object.downloads + 1;
+
+        // to-do: add purchase to purchases wtf
+
+        emit ObjectBought(purchase_id, _id, msg.sender);
     }
 }
