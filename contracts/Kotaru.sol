@@ -2,25 +2,27 @@ pragma solidity ^0.8.0;
 
 contract Kotaru {
     string public name = "Kotaru";
-    uint256 public objectCount = 0;
-    mapping(uint256 => Object) public objects;
+    uint256 public objektCount = 0;
+    uint256 public totalDownloads = 0;
+    mapping(uint256 => Objekt) public objekts;
+    mapping(uint256 => Download) public downloads;
 
-    struct Object {
+    struct Objekt {
         uint256 id;
         string name;
-        string ipfs_hash;
+        string ipfs_uri;
         uint256 price;
         uint256 downloads;
         address payable publisher;
     }
 
-    struct Purchase {
+    struct Download {
         uint256 id;
-        uint256 object_id;
+        uint256 objekt_id;
         address buyer;
     }
 
-    event ObjectPublished(
+    event ObjektPublished(
         uint256 id,
         string name,
         string ipfs_hash,
@@ -29,13 +31,13 @@ contract Kotaru {
         address payable publisher
     );
 
-    event ObjectBought(
+    event ObjektBought(
         uint256 id,
         uint256 object_id,
         address buyer
     );
 
-    function publishObject(
+    function publishObjekt(
         string memory _name,
         string memory _ipfs_hash,
         uint256 _price
@@ -44,43 +46,45 @@ contract Kotaru {
         require(bytes(_ipfs_hash).length > 0);
         require(msg.sender != address(0));
 
-        objectCount++;
+        objektCount++;
 
         address payable publisher = payable(msg.sender);
 
-        uint downloads = 0;
+        uint objekt_downloads = 0;
 
-        objects[objectCount] = Object(
-            objectCount,
+        objekts[objektCount] = Objekt(
+            objektCount,
             _name,
             _ipfs_hash,
             _price,
-            downloads,
+            objekt_downloads,
             publisher
         );
 
-        emit ObjectPublished(objectCount, _name, _ipfs_hash, _price, downloads, publisher);
+        emit ObjektPublished(objektCount, _name, _ipfs_hash, _price, objekt_downloads, publisher);
     }
 
-    function buyObject(uint256 _id) public payable {
-        require(_id > 0 && _id <= objectCount);
-        Object memory _object = objects[_id];
-        address payable _publisher = payable(_object.publisher);
+    function buyObjekt(uint256 _id) public payable {
+        require(_id > 0 && _id <= objektCount);
+
+        // get objekt
+        Objekt memory _objekt = objekts[_id];
+        address payable _publisher = payable(_objekt.publisher);
 
         // address payable publisher = payable(msg.sender);
-        uint256 _price = _object.price;
+        uint256 _price = _objekt.price;
         // require(_price = msg.value);
 
         _publisher.transfer(_price);
 
         // update object
-        _object.downloads = _object.downloads + 1;
-        objects[_id] = _object;
+        _objekt.downloads = _objekt.downloads + 1;
+        objekts[_id] = _objekt;
 
-        uint256 purchase_id = _object.downloads + 1;
+        uint256 purchase_id = _objekt.downloads + 1;
 
         // to-do: add purchase to purchases wtf
 
-        emit ObjectBought(purchase_id, _id, msg.sender);
+        emit ObjektBought(purchase_id, _id, msg.sender);
     }
 }
