@@ -65,26 +65,36 @@ contract Kotaru {
     }
 
     function buyObjekt(uint256 _id) public payable {
+        // id must be valid
         require(_id > 0 && _id <= objektCount);
-
-        // get objekt
+        // increase downloads count
+        totalDownloads++;
+        
+        // get objekt (aka product) with the provided id
         Objekt memory _objekt = objekts[_id];
-        address payable _publisher = payable(_objekt.publisher);
-
-        // address payable publisher = payable(msg.sender);
+        // extract objekt publisher
+        address payable _publisher = _objekt.publishers;
+        // also the buyer
+        address buyer = msg.sender;
+        // extract objekt price
         uint256 _price = _objekt.price;
-        // require(_price = msg.value);
+        // require price to be equal to what is being paid
+        require(_price = msg.value);
+        // transfer eth
+        _publisher.transfer(msg.value);
 
-        _publisher.transfer(_price);
-
-        // update object
+        // update the objekt to increment downloads count
         _objekt.downloads = _objekt.downloads + 1;
         objekts[_id] = _objekt;
+        
+        // save purchase on-chains
+        downloads[totalDownloads] = Download(
+            totalDownloads,
+            _id,
+            buyer
+        );
 
-        uint256 purchase_id = _objekt.downloads + 1;
-
-        // to-do: add purchase to purchases wtf
-
+        // emit the event
         emit ObjektBought(purchase_id, _id, msg.sender);
     }
 }
