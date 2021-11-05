@@ -50,10 +50,10 @@ export default function AppLayout ({ children, pageTitle }) {
             address: accounts[0],
             balance: ethBal
         });
-        initContract()
+        initContract(accounts[0])
     }
 
-    async function initContract() {
+    async function initContract(wallet_address: string) {
         let networkId = await web3.eth.net.getId();
         let _contractjson: any = ContractJSON
         let _contract = new web3.eth.Contract(_contractjson.abi, "0x016693c0af859B175BA212e83fAa153e37115D18");
@@ -61,17 +61,15 @@ export default function AppLayout ({ children, pageTitle }) {
         console.log(_contract);
 
         // objects count
-        let objects = [];
-        let objCount = await _contract.methods.objectCount().call()
+        let objekts = [];
+        let objektCount = await _contract.methods.objectCount().call()
 
-        for(let i = 0; i < objCount; i++) {
-            let object = await _contract.methods.objects(i).call();
-            if(object.publisher.toLowerCase() === walletState.address.toLowerCase()) {
-                objects.push(object)
+        for(let i = 0; i < objektCount; i++) {
+            let objekt = await _contract.methods.objects(i).call();
+            if(objekt.publisher.toLowerCase() === wallet_address.toLowerCase()) {
+                objekts.push(objekt)
             }
         }
-        
-        console.log(objects);
     }
 
     return (

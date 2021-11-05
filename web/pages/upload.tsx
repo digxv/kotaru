@@ -89,13 +89,9 @@ export default function Upload() {
         }).then(result => {
 
             publishObject(`ipfs://${cid.string}`, filename, price).then(res => {
-                console.log(res.events);
-                console.log(res.events.ObjectPublished);
-                console.log(res.events.ObjectPublished.returnValues);
-
                 setReady({
                     success: true,
-                    id: cid.string
+                    id: res.events.ObjectPublished.returnValues.id
                 }); 
                 setUploading(false);
             }).catch(err => {
