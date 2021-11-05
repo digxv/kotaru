@@ -62,12 +62,12 @@ export default function Footer() {
         spacing={4}
         justify={{ base: 'center', md: 'space-between' }}
         align={{ base: 'center', md: 'center' }}>
-        <Text fontSize="lg"><Link href="https://docs.kotaru.io" target="_blank">Documentation</Link></Text>
+        <Text fontSize="lg"><Link href="https://docs.kotaru.xyz" target="_blank">Documentation</Link></Text>
         <Stack direction={'row'} spacing={6}>
-          <SocialButton label={'Twitter'} href={'https://twitter.com/kotaruio'}>
+          <SocialButton label={'Twitter'} href={'https://twitter.com/kotaruxyz'}>
             <FaTwitter />
           </SocialButton>
-          <SocialButton label={'Email'} href={'mailto:usekotaru'}>
+          <SocialButton label={'Email'} href={'mailto:usekotaru@gmail.com'}>
             <MdEmail />
           </SocialButton>
         </Stack>
