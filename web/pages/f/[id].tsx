@@ -5,7 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import CryptoJS from "crypto-js";
 import { WalletContext } from "../../utils/walletContext";
 import { useRouter } from 'next/router';
-import { Web3Context } from "../../utils/web3Context";
+import { ContractContext, Web3Context } from "../../utils/web3Context";
 import { db } from "../../utils/firebase";
 import axios from "axios";
 import Web3 from "web3";
@@ -20,6 +20,7 @@ export default function Create() {
     const [walletState, setWalletState]: any = useContext(WalletContext);
     // web3 context
     const [web3Context, setWeb3Context]: any = useContext(Web3Context);
+    const [contract, setContract]: any = useContext(ContractContext);
     // window type
     let windowType: any;
     // product details
@@ -33,13 +34,18 @@ export default function Create() {
     })
     const [loaded, setLoaded] = useState(false);
     const [value, setValue] = useState(0);
-    // button loading text
     const [buttonLoading, setButtonLoading] = useState(false);
 
     useEffect(() => {
 
-        // set window 
         windowType = window;
+        LoadObjekt();
+        
+    }, [id]);
+
+    const LoadObjekt = async () => {
+        const objektBlock = await contract.methods.objects(id).call();
+        console.log(objektBlock);
 
         const Http = new XMLHttpRequest();
         const url=`https://ipfs.io/ipfs/${id}`;
@@ -55,7 +61,7 @@ export default function Create() {
             console.log(value_in_eth);
             setValue(value_in_eth);
         }
-    }, [id]);
+    }
 
     const PayDownloadClick = async () => {
 

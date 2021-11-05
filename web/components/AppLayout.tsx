@@ -54,11 +54,10 @@ export default function AppLayout ({ children, pageTitle }) {
     }
 
     async function initContract(wallet_address: string) {
-        let networkId = await web3.eth.net.getId();
+        // let networkId = await web3.eth.net.getId();
         let _contractjson: any = ContractJSON
         let _contract = new web3.eth.Contract(_contractjson.abi, "0x016693c0af859B175BA212e83fAa153e37115D18");
         setContract(_contract);
-        console.log(_contract);
 
         // objects count
         let objekts = [];
