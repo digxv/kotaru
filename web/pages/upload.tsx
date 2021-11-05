@@ -41,6 +41,7 @@ export default function Upload() {
             reader.readAsDataURL(file);
         } else {
             setFormError(true);
+            setUploading(false);
         }
     }
 
@@ -88,7 +89,10 @@ export default function Upload() {
         }).then(result => {
 
             publishObject(`ipfs://${cid.string}`, filename, price).then(res => {
-                console.log(res);
+                console.log(res.events);
+                console.log(res.events.ObjectPublished);
+                console.log(res.events.ObjectPublished.returnValues);
+
                 setReady({
                     success: true,
                     id: cid.string
@@ -123,7 +127,7 @@ export default function Upload() {
                     <>
                         <Text color="white" fontSize="xl">Your product is ready to be shared with the world! Just copy the link below and send over to your audience.</Text>
                         <br />
-                        <Link href={`/f/${ready.id}`} target="_blank" ><Text color="white" letterSpacing="wider" fontWeight="bold" borderRadius="sm" padding="2" bg="blue.400" fontSize="xl">https://v1.kotaru.io/f/{ready.id}</Text></Link>
+                        <Link href={`/f/${ready.id}`} target="_blank" ><Text color="white" letterSpacing="wider" fontWeight="bold" borderRadius="sm" padding="2" bg="blue.400" fontSize="xl">https://kotaru.xyz/f/{ready.id}</Text></Link>
                     </>
                     :
                     <>
