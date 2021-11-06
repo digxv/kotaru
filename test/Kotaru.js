@@ -1,12 +1,12 @@
-const { expect, assert } = require("chai");
+const { expect } = require("chai");
 
 describe("Kotaru contract", () => {
-    let Kotaru, kotaru, accounts;
+    let Kotaru, kotaru, owner, ac1, ac2, acs;
 
     beforeEach(async () => {
         Kotaru = await ethers.getContractFactory("Kotaru");
         kotaru = await Kotaru.deploy();
-        accounts = await ethers.getSigners();
+        [ac1, ac2, ...acs] = await ethers.getSigners();
     });
 
     describe("Deployment", () => {
@@ -17,8 +17,8 @@ describe("Kotaru contract", () => {
             expect(address).to.be.not.undefined;
             expect(address).to.be.not.equal(0x0);
             expect(address).to.be.a("string");
-            expect(accounts).to.not.undefined;
-            expect(accounts).to.be.length.above(0);
+            expect(acs).to.not.undefined;
+            expect(acs).to.be.length.above(0);
         })
 
         it("has a name", async() => {
@@ -27,30 +27,40 @@ describe("Kotaru contract", () => {
         })
     })
 
-    describe("Objects", () => {
-        let tx, objectCount;
+    describe("Objekts", () => {
+        let publishTx, buyTx, objektCount, totalDownloads;
 
         before(async () => {
-            tx = await kotaru.publishObject("Object #1", "ipfs://xxxx", 0, {
-                from: accounts[0].address
+            publishTx = await kotaru.publishObjekt("Objekt #1", "ipfs://xxxx", 0, {
+                from: ac1.address
             });
-            objectCount = await kotaru.objectCount();
+
+            objektCount = await kotaru.objektCount();
+
+            buyTx = await kotaru.connect(ac2).buyObjekt(0, {
+                from: ac2.address
+            });
         });
 
-        it("publish object", async () => {
-            expect(tx.hash).to.be.a("string");
-            expect(objectCount).equal(1);
+        it("publish objekt", async () => {
+            expect(publishTx.hash).to.be.a("string");
+            expect(objektCount).equal(1);
 
-            const receipt = await tx.wait();
-            const logs = receipt.events[objectCount - 1].args;
+            const receipt = await publishTx.wait();
+            const logs = receipt.events[objektCount - 1].args;
             expect(logs).to.be.an("array");
             expect(logs).to.be.length.above(0);
 
-            expect(logs.id.toNumber()).is.equal(objectCount);
-            expect(logs.name).is.equal("Object #1");
+            expect(logs.id.toNumber()).is.equal(objektCount);
+            expect(logs.name).is.equal("Objekt #1");
             expect(logs.ipfs_hash).is.equal("ipfs://xxxx");
             expect(logs.price).is.equal(0);
-            expect(logs.publisher).is.equal(accounts[0].address);
+            expect(logs.downloads).is.equal(0);
+            expect(logs.publisher).is.equal(ac1.address);
         });
+
+        // it("buy objekt", async () => {
+        //     expect(buyTx.hash).to.be.a("string");
+        // });
     })
 })
