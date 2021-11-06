@@ -61,10 +61,10 @@ export default function AppLayout ({ children, pageTitle }) {
 
         // objects count
         let objekts = [];
-        let objektCount = await _contract.methods.objectCount().call()
+        let objektCount = await _contract.methods.objektCount().call()
 
         for(let i = 0; i < objektCount; i++) {
-            let objekt = await _contract.methods.objects(i).call();
+            let objekt = await _contract.methods.objekts(i).call();
             if(objekt.publisher.toLowerCase() === wallet_address.toLowerCase()) {
                 objekts.push(objekt)
             }

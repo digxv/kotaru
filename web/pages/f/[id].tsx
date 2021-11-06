@@ -41,25 +41,24 @@ export default function Create() {
         windowType = window;
         LoadObjekt();
         
-    }, [id]);
+    }, [id, contract]);
 
     const LoadObjekt = async () => {
-        const objektBlock = await contract.methods.objects(id).call();
-        console.log(objektBlock);
+        if (id !== undefined && contract !== undefined) {
+            const objektBlock = await contract.methods.objekts(id).call();
+            const Http = new XMLHttpRequest();
+            const url=`https://ipfs.io/ipfs/${objektBlock.ipfs_uri.substr(7)}`;
+            Http.open("GET", url);
+            Http.send();
+            Http.onloadend = async (e) => {
+                let JSON_meta = JSON.parse(Http.responseText);
+                setMetaData(JSON_meta);
+                setLoaded(true)
 
-        const Http = new XMLHttpRequest();
-        const url=`https://ipfs.io/ipfs/${id}`;
-        Http.open("GET", url);
-        Http.send();
-
-        Http.onloadend = async (e) => {
-            let JSON_meta = JSON.parse(Http.responseText);
-            setMetaData(JSON_meta);
-            setLoaded(true)
-
-            let value_in_eth = await web3Context.utils.fromWei(JSON_meta.value, "ether");
-            console.log(value_in_eth);
-            setValue(value_in_eth);
+                let value_in_eth = await web3Context.utils.fromWei(JSON_meta.value, "ether");
+                console.log(value_in_eth);
+                setValue(value_in_eth);
+            }
         }
     }
 

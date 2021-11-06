@@ -88,10 +88,10 @@ export default function Upload() {
             hash: cid.string
         }).then(result => {
 
-            publishObject(`ipfs://${cid.string}`, filename, price).then(res => {
+            publishObjekt(`ipfs://${cid.string}`, filename, price).then(res => {
                 setReady({
                     success: true,
-                    id: res.events.ObjectPublished.returnValues.id
+                    id: res.events.ObjektPublished.returnValues.id
                 }); 
                 setUploading(false);
             }).catch(err => {
@@ -104,8 +104,8 @@ export default function Upload() {
 
     }
 
-    const publishObject = async (ipfs_hash: string, name: string, price: number) => {
-        return contract.methods.publishObject(name, ipfs_hash, price).send({from: walletState.address});
+    const publishObjekt = async (ipfs_hash: string, name: string, price: number) => {
+        return contract.methods.publishObjekt(name, ipfs_hash, price).send({from: walletState.address});
     }
 
     return (
