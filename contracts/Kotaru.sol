@@ -31,11 +31,7 @@ contract Kotaru {
         address payable publisher
     );
 
-    event ObjektBought(
-        uint256 id,
-        uint256 object_id,
-        address buyer
-    );
+    event ObjektBought(uint256 id, uint256 object_id, address buyer);
 
     function publishObjekt(
         string memory _name,
@@ -50,7 +46,7 @@ contract Kotaru {
 
         address payable publisher = payable(msg.sender);
 
-        uint objekt_downloads = 0;
+        uint256 objekt_downloads = 0;
 
         objekts[objektCount] = Objekt(
             objektCount,
@@ -61,7 +57,14 @@ contract Kotaru {
             publisher
         );
 
-        emit ObjektPublished(objektCount, _name, _ipfs_hash, _price, objekt_downloads, publisher);
+        emit ObjektPublished(
+            objektCount,
+            _name,
+            _ipfs_hash,
+            _price,
+            objekt_downloads,
+            publisher
+        );
     }
 
     function buyObjekt(uint256 _id) public payable {
@@ -69,7 +72,7 @@ contract Kotaru {
         require(_id <= objektCount);
         // increase downloads count
         totalDownloads++;
-        
+
         // get objekt (aka product) with the provided id
         Objekt memory _objekt = objekts[_id];
         // extract objekt publisher
@@ -78,22 +81,19 @@ contract Kotaru {
         address buyer = msg.sender;
         // extract objekt price
         uint256 _price = _objekt.price;
+
         // require price to be equal to what is being paid
         // FIX BELOW
-        // require(_price = msg.value);
+        require(msg.value == _price);
         // transfer eth
         _publisher.transfer(msg.value);
 
         // update the objekt to increment downloads count
         _objekt.downloads = _objekt.downloads + 1;
         objekts[_id] = _objekt;
-        
+
         // save purchase on-chains
-        downloads[totalDownloads] = Download(
-            totalDownloads,
-            _id,
-            buyer
-        );
+        downloads[totalDownloads] = Download(totalDownloads, _id, buyer);
 
         // emit the event
         emit ObjektBought(totalDownloads, _id, msg.sender);

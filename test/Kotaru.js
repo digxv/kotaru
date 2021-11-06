@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 
 describe("Kotaru contract", () => {
-    let Kotaru, kotaru, owner, ac1, ac2, acs;
+    let Kotaru, kotaru, ac1, ac2, acs;
 
     beforeEach(async () => {
         Kotaru = await ethers.getContractFactory("Kotaru");
