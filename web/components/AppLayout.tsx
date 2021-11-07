@@ -9,10 +9,6 @@ import { ContractContext, Web3Context } from "../utils/web3Context";
 import ContractJSON from "../../artifacts/contracts/Kotaru.sol/Kotaru.json";
 
 export default function AppLayout ({ children, pageTitle }) {
-
-    // https://mainnet.infura.io/v3/e14446aa2db54feb9068af263aabf2ea
-    // for development: use ganache personal blockchain (http://127.0.0.1:7545)
-    // let web3 =  new Web3("https://rinkeby.infura.io/v3/e14446aa2db54feb9068af263aabf2ea");
     let windowType: any;
     let web3: any;
     let provider: any;
@@ -21,7 +17,6 @@ export default function AppLayout ({ children, pageTitle }) {
     const [accountAddress, setAccountAddress] = useState("");
     const [accountBalance, setAccountBalance] = useState();
 
-    // contexts
     const [web3Context, setWeb3Context]: any = useContext(Web3Context);
     const [walletState, setWalletState]: any = useContext(WalletContext);
     const [contract, setContract]: any = useContext(ContractContext);
@@ -55,7 +50,7 @@ export default function AppLayout ({ children, pageTitle }) {
     async function initContract(wallet_address: string) {
         // let networkId = await web3.eth.net.getId();
         let _contractjson: any = ContractJSON
-        let _contract = new web3.eth.Contract(_contractjson.abi, "0xe1EBD03808a6C080350501140Ac8Cf9740F6Ba47");
+        let _contract = new web3.eth.Contract(_contractjson.abi, process.env.NEXT_PUBLIC_CONTRACT_ADDRESS);
         setContract(_contract);
 
         let objekts = [];
@@ -67,8 +62,6 @@ export default function AppLayout ({ children, pageTitle }) {
                 objekts.push(objekt)
             }
         }
-
-        console.log(objekts);
     }
 
     return (

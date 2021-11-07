@@ -9,8 +9,7 @@ let firebaseConfig = {
     projectId: "kotaru-5472c",
     storageBucket: "kotaru-5472c.appspot.com",
     messagingSenderId: "122672585386",
-    appId: "1:122672585386:web:83fd8c9d94c68f56bc0ed3",
-    measurementId: "G-4JBJL6ESXE"
+    appId: "1:122672585386:web:83fd8c9d94c68f56bc0ed3"
 };
 
 let app
@@ -24,4 +23,4 @@ let db = firebase.firestore();
 export {
     db
 }
-export default app
+// export default app

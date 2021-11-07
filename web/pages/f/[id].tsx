@@ -45,7 +45,7 @@ export default function Objekt() {
         if (id !== undefined && contract !== undefined) {
             const objektBlock = await contract.methods.objekts(id).call();
             const Http = new XMLHttpRequest();
-            const url=`https://ipfs.io/ipfs/${objektBlock.ipfs_uri.substr(7)}`;
+            const url=`https://gateway.pinata.cloud/ipfs/${objektBlock.ipfs_uri.substr(7)}`;
             Http.open("GET", url);
             Http.send();
             Http.onloadend = async (e) => {
@@ -96,6 +96,7 @@ export default function Objekt() {
             });
 
             // DecryptDownload(decryptionKeyRes.data.decrypted, decryptionKeyRes.data.encryptedFile);
+            console.log(decryptionKeyRes.data.decryptedFile);
             let link = document.createElement("a");
             link.href = decryptionKeyRes.data.decryptedFile;
             link.download = `${metaData.filename}.png`;
@@ -104,22 +105,6 @@ export default function Objekt() {
         } catch (error) {
             console.error(error);
             setButtonLoading(false);
-        }
-    }
-
-    const DecryptDownload = (key: any, encrypted_file: any) => {
-        let Http = new XMLHttpRequest();
-        let url=`https://ipfs.io/ipfs/${metaData.encrypted_file_cid}`;
-        Http.open("GET", url);
-        Http.send();
-
-        Http.onloadend = (e) => {
-            let decrypted = CryptoJS.AES.decrypt(encrypted_file, key).toString(CryptoJS.enc.Latin1);
-            let link = document.createElement("a");
-            link.href = `${decrypted}`;
-            link.download = "kotaru.png";
-            setButtonLoading(false);
-            link.click();
         }
     }
 
