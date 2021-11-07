@@ -1,55 +1,26 @@
+import Web3 from "web3";
 import { db } from "../../utils/firebase"
+import ContractJSON from "../../../artifacts/contracts/Kotaru.sol/Kotaru.json";
 let XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 export default async (req: any, response) => {
 
     if(req.method === "POST") {
-        let txRef = db.collection("transactions");
-        let snapshot = await txRef.where("tx_hash", "==", req.body.tx_hash).get();
-        
-        if (snapshot.empty) {
-            return response.status(400).json({ msg: "user haven't paid yet" })
-        } else {
-            let doc: any = snapshot.docs[0];
-
-            // fetch the metadata file using the cid provided by user
-            // match value mentioned in metadata file with the transaction value
-            // if they are equal, do the following
-            // generate a random string
-            // add it to the db with the info: string, user, tx_hash & metadata cid
-            // they sign the random string & send the hash back to a separate route
-            // extract the signer address from the hash and verify it with one who generated the string
-            // if they are same, fetch the metadata file
-            // pick the decryption key
-            // decrypt it using the universal key and send the decrypted key as response
-
-            let doc_data: any = doc.data();
-
-            let Http = new XMLHttpRequest();
-            let url=`https://ipfs.io/ipfs/${doc_data.metadata_cid}`;
-            Http.open("GET", url);
-            Http.send();
-
-            Http.onloadend = async (e) => {
-                let JSON_meta = JSON.parse(Http.responseText);
-
-                let randomString = Math.random().toString(36);
-
-                let res = await db.collection("orders").add({
-                    string: randomString,
-                    for_user: doc_data.from,
-                    for_metadata_cid: req.body.metadata_cid,
-                    tx_hash: req.body.tx_hash
-                });
-
-                let orderId = res.id;
-
-                return response.status(200).json({
-                    string: randomString
-                })
-            }
-        }
-    
+        let web3 =  new Web3("https://rinkeby.infura.io/v3/e14446aa2db54feb9068af263aabf2ea");
+        let _contractJSON: any = ContractJSON;
+        let contract = new web3.eth.Contract(_contractJSON.abi, "0xe1EBD03808a6C080350501140Ac8Cf9740F6Ba47");
+        let downloadBlock = await contract.methods.downloads(req.body.download_id).call();
+        let randomString = Math.random().toString(36);
+        let fb_save = await db.collection("orders").add({
+            download_id: req.body.download_id,
+            buyer: downloadBlock.buyer,
+            string: randomString
+        })
+        return response.status(200).json({
+            download_id: req.body.download_id,
+            buyer: downloadBlock.buyer,
+            string: randomString
+        })
     } else {
         response.status(400).json({ msg: "wrong method bro" })
     }

@@ -74,7 +74,6 @@ contract Kotaru {
 
         Objekt memory _objekt = objekts[_id];
         address payable _publisher = _objekt.publisher;
-        address buyer = msg.sender;
         uint256 _price = _objekt.price;
 
         require(msg.value == _price);
@@ -83,7 +82,7 @@ contract Kotaru {
         _objekt.downloads = _objekt.downloads + 1;
         objekts[_id] = _objekt;
 
-        downloads[totalDownloads] = Download(totalDownloads, _objekt.id, buyer);
+        downloads[totalDownloads] = Download(totalDownloads, _objekt.id, msg.sender);
 
         emit ObjektBought(totalDownloads, _objekt.id, msg.sender);
     }

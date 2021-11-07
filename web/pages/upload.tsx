@@ -46,26 +46,29 @@ export default function Upload() {
     }
 
     const processFile = async (e: any) => {
-        let passphrase = Math.random().toString(36);
-        let encrypted = CryptoJS.AES.encrypt(e.target.result, passphrase);
-        let link = document.createElement("a");
-        link.href = `data:application/octet-stream,${encrypted}`;
-        link.download = "kotaru.encrypted";
-        document.body.appendChild(link);
-        const { cid } = await ipfs.add(urlSource(`data:application/octet-stream,${encrypted}`));
-        // logs
-        console.log("encrypted stuff is on ipfs now!");
-        // get the passphrase encrypted
-        axios.post("/api/encryptString", {
-            string: passphrase
-        }).then(async (res: any) => {
+        try {
+            let passphrase = Math.random().toString(36);
+            let encrypted = CryptoJS.AES.encrypt(e.target.result, passphrase);
+            let link = document.createElement("a");
+            link.href = `data:application/octet-stream,${encrypted}`;
+            link.download = "kotaru.encrypted";
+            document.body.appendChild(link);
+            const { cid } = await ipfs.add(urlSource(`data:application/octet-stream,${encrypted}`));
+
+            let pfObjekt = await axios.post("/api/pinFile", {
+                hash: cid.string
+            });
+
+            console.log("encrypted stuff is on ipfs now!");
+
+            let encryptStringRes = await axios.post("/api/encryptString", {
+                string: passphrase
+            });
 
             let value = await web3Context.utils.toWei(price, "ether");
 
-            console.log(value);
-
             let JSON_meta = {
-                decryption_key: res.data.encryptedString,
+                decryption_key: encryptStringRes.data.encryptedString,
                 encrypted_file_cid: cid.string,
                 payable_address: walletState.address,
                 value: value,
@@ -74,21 +77,23 @@ export default function Upload() {
             }
 
             finalMetaUpload(JSON_meta);
-
-        }).catch(err => {
-            console.error(err);
-        });
+            
+        } catch (error) {
+            console.error(error);
+            setUploading(false);
+        }
     }
 
     const finalMetaUpload = async (meta: any) => {
-        let MetaString = JSON.stringify(meta);
-        const { cid } = await ipfs.add(MetaString);
+        try {
+            let MetaString = JSON.stringify(meta);
+            const { cid } = await ipfs.add(MetaString);
 
-        axios.post("/api/pinFile", {
-            hash: cid.string
-        }).then(result => {
+            let pfMetadata = await axios.post("/api/pinFile", {
+                hash: cid.string
+            });
 
-            publishObjekt(`ipfs://${cid.string}`, filename, price).then(res => {
+            publishObjekt(`ipfs://${cid.string}`, filename, meta.value).then(res => {
                 setReady({
                     success: true,
                     id: res.events.ObjektPublished.returnValues.id
@@ -97,11 +102,10 @@ export default function Upload() {
             }).catch(err => {
                 console.error(err)
             })
-           
-        }).catch(error => {
+        } catch (error) {
             console.error(error);
-        });
-
+            setUploading(false);
+        }
     }
 
     const publishObjekt = async (ipfs_hash: string, name: string, price: number) => {

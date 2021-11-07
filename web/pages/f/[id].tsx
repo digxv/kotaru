@@ -10,7 +10,7 @@ import { db } from "../../utils/firebase";
 import axios from "axios";
 import Web3 from "web3";
 
-export default function Create() {
+export default function Objekt() {
 
     // url params
     const router = useRouter();
@@ -37,10 +37,8 @@ export default function Create() {
     const [buttonLoading, setButtonLoading] = useState(false);
 
     useEffect(() => {
-
         windowType = window;
         LoadObjekt();
-        
     }, [id, contract]);
 
     const LoadObjekt = async () => {
@@ -54,102 +52,69 @@ export default function Create() {
                 let JSON_meta = JSON.parse(Http.responseText);
                 setMetaData(JSON_meta);
                 setLoaded(true)
-
                 let value_in_eth = await web3Context.utils.fromWei(JSON_meta.value, "ether");
-                console.log(value_in_eth);
                 setValue(value_in_eth);
             }
         }
     }
 
     const PayDownloadClick = async () => {
-
         setButtonLoading(true);
 
-        db.collection("transactions")
-        .doc(walletState.address + id)
-        .get()
-        .then(async txDoc => {
-            if(txDoc.exists) {
-                let doc_data: any = txDoc.data();
-                VerifyUser(doc_data.tx_hash);
-            } else {
-                if (web3Context !== undefined) {
+        let downloads = [];
+        let totalDownloads = await contract.methods.totalDownloads().call();
 
-                    windowType = window;
+        for(let i = 1; i < totalDownloads; i++) {
+            let download = await contract.methods.downloads(i).call();
+            downloads.push(download);
+        }
 
-                    // use metamask to send a transaction
-                    let transactionParameters = {
-                        nonce: '0x00', // ignored by MetaMask
-                        to: metaData.payable_address, // Required except during contract publications.
-                        from: walletState.address, // must match user's active address.
-                        value: metaData.value, // Only required to send ether to the recipient from the initiating external account.
-                        chainId: '0x3', // Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
-                    };
+        let filterDownloads = downloads.filter(download => download.objekt_id === id && download.buyer.toLowerCase() === walletState.address.toLowerCase());
 
-                    // initiate transaction
-                    let txHash = await windowType.ethereum.request({
-                        method: 'eth_sendTransaction',
-                        params: [transactionParameters],
-                    });
-
-                    // get transaction using the hash
-                    web3Context.eth.getTransaction(txHash).then(async (details) => {
-                        let res = await db.collection("transactions").doc(walletState.address + id).set({
-                            metadata_cid: id,
-                            tx_hash: txHash,
-                            from: details.from,
-                            to: details.to,
-                            value: details.value
-                        });
-                        VerifyUser(txHash);
-                    }).catch(err => {
-                        console.log("failed to check transaction");
-                        setButtonLoading(false);
-                    });
-                }
-            }
-        });
+        if(filterDownloads.length > 0) {
+            console.log(filterDownloads[0].id);
+            VerifyUser(filterDownloads[0].id);
+        } else {
+            buyObjektCall().then(res => {
+                console.log(res.events.ObjektBought.returnValues.id);
+                VerifyUser(res.events.ObjektBought.returnValues.id);
+            });
+        }
     }
     
-    const VerifyUser = (txHash: any) => {
-        // messy code but just want to sign the message for now
-        // will make it more stable & understandable afterwards
-        windowType = window;
-
-        let web3 = new Web3(windowType.ethereum);
-
-        axios.post("/api/generateRandomString", {
-            user: walletState.address,
-            tx_hash: txHash,
-            metadata_cid: id
-        }).then(async data => {
-            // get the string signed
-            let signature = await web3.eth.personal.sign(data.data.string, walletState.address, "");
-            // send string to server to verify and get decryption key
-            axios.post("/api/getDecryptionKey", {
-                string: data.data.string,
-                signature: signature
-            }).then(resource => {
-                DecryptDownload(resource.data.decrypted);
-            }).catch(error => {
-                console.error(error);
-                setButtonLoading(false);
+    const VerifyUser = async (download_id: any) => {
+        try {
+            let randomStringRes = await axios.post("/api/generateRandomString", {
+                download_id: download_id
+            })
+    
+            let signature = await web3Context.eth.personal.sign(randomStringRes.data.string, walletState.address, "");
+    
+            let decryptionKeyRes = await axios.post("/api/getDecryptionKey", {
+                string: randomStringRes.data.string,
+                signature: signature,
             });
-        }).catch(error => {
+
+            // DecryptDownload(decryptionKeyRes.data.decrypted, decryptionKeyRes.data.encryptedFile);
+            let link = document.createElement("a");
+            link.href = decryptionKeyRes.data.decryptedFile;
+            link.download = `${metaData.filename}.png`;
+            setButtonLoading(false);
+            link.click();
+        } catch (error) {
             console.error(error);
             setButtonLoading(false);
-        })
+        }
     }
 
-    const DecryptDownload = (key: any) => {
+    const DecryptDownload = (key: any, encrypted_file: any) => {
         let Http = new XMLHttpRequest();
         let url=`https://ipfs.io/ipfs/${metaData.encrypted_file_cid}`;
         Http.open("GET", url);
         Http.send();
 
         Http.onloadend = (e) => {
-            let decrypted = CryptoJS.AES.decrypt(Http.responseText, key).toString(CryptoJS.enc.Latin1);
+            let decrypted = CryptoJS.AES.decrypt(encrypted_file, key).toString(CryptoJS.enc.Latin1);
             let link = document.createElement("a");
             link.href = `${decrypted}`;
             link.download = "kotaru.png";
@@ -158,8 +123,15 @@ export default function Create() {
         }
     }
 
+    const buyObjektCall = async () => {
+        return await contract.methods.buyObjekt(id).send({
+            from: walletState.address,
+            value: metaData.value
+        })
+    }
+
     return (
-        <AppLayout pageTitle="Kotaru">
+        <AppLayout pageTitle="Kotaru.xyz">
             <Box
                 marginRight="auto"
                 marginLeft="auto"

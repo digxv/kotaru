@@ -32,7 +32,6 @@ export default function AppLayout ({ children, pageTitle }) {
 
         if (typeof windowType.ethereum !== "undefined") {
             loadAccounts();
-            // initContract();
         } else {
             console.log("consider using MM")
         }
@@ -56,10 +55,9 @@ export default function AppLayout ({ children, pageTitle }) {
     async function initContract(wallet_address: string) {
         // let networkId = await web3.eth.net.getId();
         let _contractjson: any = ContractJSON
-        let _contract = new web3.eth.Contract(_contractjson.abi, "0x5957D802dCA771218F9E1652B9Ac78E1D938f8b1");
+        let _contract = new web3.eth.Contract(_contractjson.abi, "0xe1EBD03808a6C080350501140Ac8Cf9740F6Ba47");
         setContract(_contract);
 
-        // objects count
         let objekts = [];
         let objektCount = await _contract.methods.objektCount().call()
 
@@ -69,6 +67,8 @@ export default function AppLayout ({ children, pageTitle }) {
                 objekts.push(objekt)
             }
         }
+
+        console.log(objekts);
     }
 
     return (
