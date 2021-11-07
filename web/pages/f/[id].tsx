@@ -6,7 +6,6 @@ import CryptoJS from "crypto-js";
 import { WalletContext } from "../../utils/walletContext";
 import { useRouter } from 'next/router';
 import { ContractContext, Web3Context } from "../../utils/web3Context";
-import { db } from "../../utils/firebase";
 import axios from "axios";
 import Web3 from "web3";
 
