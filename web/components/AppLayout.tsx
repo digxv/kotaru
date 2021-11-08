@@ -77,7 +77,7 @@ export default function AppLayout ({ children, pageTitle }) {
                 bg="#000000"
             >
                 <Header accountAddress={accountAddress} accountBalance={accountBalance} />
-                <Box marginTop="200px">
+                <Box maxWidth="1200px" marginLeft="auto" marginRight="auto" marginTop="200px">
                     {children}
                 </Box>
                 <Footer />

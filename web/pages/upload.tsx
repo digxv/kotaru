@@ -115,9 +115,6 @@ export default function Upload() {
     return (
         <AppLayout pageTitle="Upload — Kotaru.xyz">
             <Box
-                marginRight="auto"
-                marginLeft="auto"
-                maxWidth="800px"
                 paddingRight={[2, 5, 8]}
                 paddingLeft={[2, 5, 8]}
             >
