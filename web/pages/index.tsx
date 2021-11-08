@@ -1,43 +1,46 @@
 import React, { useRef } from "react";
 import AppLayout from "../components/AppLayout";
 import { Box, Button, createIcon, Icon, Stack, Text } from "@chakra-ui/react";
+import Features from "../components/Features";
 
-export default function Home() {
+export default function Index() {
   return (
     <AppLayout pageTitle="Kotaru.xyz">
       <Box color="#fff" textAlign="center">
-        {/* <Text bgGradient="linear(to-l, #009ffd, #2a2a72)"
-      bgClip="text" className="hero-text" fontWeight="bold" fontSize="3xl">Decentralised & Crypto-enabled.</Text> */}
-      <Stack
-        direction={'column'}
-        spacing={3}
-        align={'center'}
-        alignSelf={'center'}
-        position={'relative'}>
-          <Box>
-              <Icon
-                as={Arrow}
-                color={'gray.300'}
-                w={90}
-                position={'absolute'}
-                right={-16}
-                top={'40px'}
-              />
-              <Text
-                fontSize={'lg'}
-                fontFamily={'Caveat'}
-                position={'absolute'}
-                right={'-125px'}
-                top={'-10px'}
-                transform={'rotate(16deg)'}>
-                Think Gumroad <br /> but decentralised.
-              </Text>
-            </Box>
-        <Text className="hero-text" lineHeight="shorter" fontWeight="bold" letterSpacing="2px" fontSize="6xl">Sell any digital <br /> product,
-        <Text bgGradient="linear(to-l, #7928CA, #FF0080)"
-  bgClip="text" display="inline" className="hero-text" lineHeight="shorter" fontWeight="bold" letterSpacing="2px" fontSize="5xl"> on-chain.</Text>
-        </Text>
+        <Stack
+          direction={'column'}
+          spacing={3}
+          align={'center'}
+          alignSelf={'center'}
+          position={'relative'}>
+            <Box>
+                <Icon
+                  as={Arrow}
+                  color={'gray.300'}
+                  w={90}
+                  position={'absolute'}
+                  right={"100px"}
+                  top={'40px'}
+                />
+                <Text
+                  fontSize={'lg'}
+                  fontFamily={'Caveat'}
+                  position={'absolute'}
+                  right={'50px'}
+                  top={'-10px'}
+                  transform={'rotate(16deg)'}>
+                  Think Gumroad <br /> but decentralised.
+                </Text>
+              </Box>
+            <Text className="hero-text" lineHeight="shorter" fontWeight="bold" letterSpacing="2px" fontSize="6xl">Sell any digital <br /> product,
+            <Text bgGradient="linear(to-l, #7928CA, #FF0080)"
+            bgClip="text" display="inline" className="hero-text" lineHeight="shorter" fontWeight="bold" letterSpacing="2px" fontSize="5xl"> on-chain.</Text>
+            </Text>
         </Stack>
+      </Box>
+
+      <Box mt="80px" padding="10px">
+        <Features />
       </Box>
     </AppLayout>
   )
