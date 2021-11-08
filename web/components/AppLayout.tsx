@@ -74,7 +74,7 @@ export default function AppLayout ({ children, pageTitle }) {
                 display="flex"
                 flexDirection="column"
                 justifyContent="space-between"
-                bg="#111111"
+                bg="#000000"
             >
                 <Header accountAddress={accountAddress} accountBalance={accountBalance} />
                 <Box marginTop="200px">

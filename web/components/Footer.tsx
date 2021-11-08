@@ -49,7 +49,7 @@ export default function Footer() {
   return (
     <Box
       color={"white"}
-      maxWidth="1000px"
+      maxWidth="1200px"
       marginRight="auto"
       marginLeft="auto"
       width="100%"
@@ -63,7 +63,7 @@ export default function Footer() {
         justify={{ base: 'center', md: 'space-between' }}
         align={{ base: 'center', md: 'center' }}>
         <Text fontSize="lg"><Link href="https://docs.kotaru.xyz" target="_blank">Documentation</Link></Text>
-        <Stack direction={'row'} spacing={6}>
+        <Stack fontSize="lg" direction={'row'} spacing={6}>
           <SocialButton label={'Twitter'} href={'https://twitter.com/kotaruxyz'}>
             <FaTwitter />
           </SocialButton>

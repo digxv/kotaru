@@ -45,13 +45,13 @@ export default async (req, response) => {
             let signingAddress = web3.eth.accounts.recover(req.body.string, req.body.signature);
 
             if(signingAddress === downloadBlock.buyer) {
-                let url=`https://gateway.pinata.cloud/ipfs/${objekt.ipfs_uri.substr(7)}`;
+                let url=`https://ipfs.io/ipfs/${objekt.ipfs_uri.substr(7)}`;
                 let objekt_metadata = (await axios.get(url)).data;
                 let decrypted = CryptoJS.AES.decrypt(objekt_metadata.decryption_key, "M&B&*#>*5X-sW27Ux)aH['A");
                 let decryptedString = decrypted.toString(CryptoJS.enc.Utf8);
                 
                 // use the decryptedString to decrypt the file and return
-                let file_url = `https://gateway.pinata.cloud/ipfs/${objekt_metadata.encrypted_file_cid}`;
+                let file_url = `https://ipfs.io/ipfs/${objekt_metadata.encrypted_file_cid}`;
                 console.log(file_url);
                 let encryptedFile = (await axios.get(file_url)).data;
                 let decryptedFile = CryptoJS.AES.decrypt(encryptedFile, decryptedString).toString(CryptoJS.enc.Latin1);

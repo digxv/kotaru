@@ -113,7 +113,7 @@ export default function Upload() {
     }
 
     return (
-        <AppLayout pageTitle="Sell — Kotaru">
+        <AppLayout pageTitle="Upload — Kotaru.xyz">
             <Box
                 marginRight="auto"
                 marginLeft="auto"
@@ -182,11 +182,11 @@ export default function Upload() {
                             paddingBottom="25px"
                             marginTop="5"
                             width="100%"
-                            backgroundColor="#000000"
+                            backgroundColor="gray.900"
                             color="#ffffff"
-                            _hover={{ bg: "#000000" }}
-                            _active={{ bg: "#000000" }}
-                            _focus={{ bg: "#000000" }}
+                            _hover={{ bg: "gray.900" }}
+                            _active={{ bg: "gray.900" }}
+                            _focus={{ bg: "gray.900" }}
                             onClick={() => {uploading ? null : EncryptUploadClick()}}
                         >
                             {uploading ? "Loading..." : "Encrypt & Upload"}

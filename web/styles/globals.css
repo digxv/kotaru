@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Martel+Sans:wght@900&display=swap");
 
 html,
 body {
@@ -18,4 +19,26 @@ a {
 
 .App {
   font-family: "Inter", sans-serif;
+}
+
+.logo {
+  font-family: "Martel Sans", sans-serif;
+  font-weight: 900;
+}
+
+.fancy-border {
+  width: 150px;
+  height: 150px;
+  text-align: center;
+  border-top: 5px solid;
+  border-image: linear-gradient(
+      to right,
+      grey 25%,
+      yellow 25%,
+      yellow 50%,
+      red 50%,
+      red 75%,
+      teal 75%
+    )
+    5;
 }

@@ -22,7 +22,7 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
 } from '@chakra-ui/icons';
-import LogoPNG from "../public/images/logo.png";
+import LogoPNG from "../public/k.png";
 import NextLink from "next/link";
 
 export default function Header({accountAddress, accountBalance}) {
@@ -30,22 +30,22 @@ export default function Header({accountAddress, accountBalance}) {
 
   return (
     <Box
-      maxWidth="1000px"
       position="fixed"
       top="0"
       width="100%"
-      left="50%"
-      transform="translate(-50%, 0)"
       zIndex="1000"
+      className="fancy-border"
     >
+      <Box
+        maxWidth="1200px"
+        marginLeft="auto"
+        marginRight="auto"
+      >
       <Flex
         color={'gray.600'}
         minH={'60px'}
-        py={{ base: 2 }}
+        py={{ base: 4 }}
         px={{ base: 4 }}
-        // borderBottom={1}
-        // borderStyle={'solid'}
-        // borderColor={'gray.200'}
         align={'center'}>
         <Flex
           flex={{ base: 1, md: 'auto' }}
@@ -63,11 +63,13 @@ export default function Header({accountAddress, accountBalance}) {
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
           <NextLink href="/">
             <Image
-              width={["40px", "50px"]}
+              cursor="pointer"
+              width={["50px", "70px"]}
               borderRadius="md"
               src={LogoPNG}
               textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
             />
+            {/* <Text color="#000" bg="#fff" padding="10px" fontSize="xl" className="logo">क </Text> */}
           </NextLink>
 
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
@@ -87,13 +89,14 @@ export default function Header({accountAddress, accountBalance}) {
             fontSize={'sm'}
             fontWeight={400}
             display={{ base: 'none', md: 'inline-flex' }}
+            size="md"
           >
             <Text fontSize="md" paddingRight="2" fontWeight="bold">{parseFloat(accountBalance).toFixed(4)}</Text> {accountAddress.substr(0, 4)}...{accountAddress.substr(accountAddress.length - 4)}
           </Button> : null}
           <NextLink href="/upload"><Button
             fontSize={'lg'}
             fontWeight={600}
-            borderRadius="3xl"
+            size="md"
             color={'white'}
             bgGradient="linear(to-l, #7928CA, #FF0080)"
             href={"/upload"}
@@ -112,6 +115,7 @@ export default function Header({accountAddress, accountBalance}) {
       <Collapse in={isOpen} animateOpacity>
         <MobileNav />
       </Collapse>
+      </Box>
     </Box>
   );
 }
@@ -204,7 +208,7 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
 const MobileNav = () => {
   return (
     <Stack
-      bg={useColorModeValue('white', 'gray.800')}
+      bg={"gray.800"}
       p={4}
       display={{ md: 'none' }}>
       {NAV_ITEMS.map((navItem) => (
@@ -272,8 +276,8 @@ interface NavItem {
 }
 
 const NAV_ITEMS: Array<NavItem> = [
-  {
-    label: 'How it works?',
-    href: '/docs',
-  }
+  // {
+  //   label: 'How it works?',
+  //   href: '/docs',
+  // }
 ];
