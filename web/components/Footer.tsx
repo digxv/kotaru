@@ -48,12 +48,13 @@ const SocialButton = ({
 export default function Footer() {
   return (
     <Box
-      color="#000000"
+      color="#ffffff"
       maxWidth="1200px"
       marginRight="auto"
       marginLeft="auto"
       width="100%"
-      bgColor="#ffffff"
+      borderTopRadius="md"
+      bgColor={"gray.900"}
     >
       <Container
         as={Stack}
@@ -64,7 +65,7 @@ export default function Footer() {
         justify={{ base: 'center', md: 'space-between' }}
         align={{ base: 'center', md: 'center' }}>
         <Text fontSize="lg"><Link href="https://docs.kotaru.xyz" target="_blank">Documentation</Link></Text>
-        <Stack fontSize="lg" direction={'row'} spacing={6}>
+        <Stack fontSize="lg" direction={'row'} spacing={4}>
           <SocialButton label={'Twitter'} href={'https://twitter.com/kotaruxyz'}>
             <FaTwitter />
           </SocialButton>

@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { ContractContext, Web3Context } from "../../utils/web3Context";
 import axios from "axios";
 import Web3 from "web3";
+import { FaDownload } from "react-icons/fa";
 
 export default function Objekt() {
 
@@ -33,6 +34,7 @@ export default function Objekt() {
     })
     const [loaded, setLoaded] = useState(false);
     const [value, setValue] = useState(0);
+    const [downloads, setDownloads] = useState(0);
     const [buttonLoading, setButtonLoading] = useState(false);
 
     useEffect(() => {
@@ -43,6 +45,7 @@ export default function Objekt() {
     const LoadObjekt = async () => {
         if (id !== undefined && contract !== undefined) {
             const objektBlock = await contract.methods.objekts(id).call();
+            setDownloads(objektBlock.downloads);
             const Http = new XMLHttpRequest();
             const url=`https://gateway.pinata.cloud/ipfs/${objektBlock.ipfs_uri.substr(7)}`;
             Http.open("GET", url);
@@ -127,11 +130,14 @@ export default function Objekt() {
                 {loaded
                 ?
                 <>
-                    <Text display="inline" fontSize="xl" style={{fontWeight: "bold"}}>
+                    <Text display="inline" fontSize="4xl" style={{fontWeight: "bold"}}>
                         {metaData.filename}
                     </Text>
-                    <Text display="inline" fontSize="lg">
-                        {" "} - {metaData.description}
+                    <Text color={"gray.500"} fontSize="lg">
+                        <Text display="inline" marginRight="2"><FaDownload style={{
+                            display: "inline"
+                        }} /> {downloads} </Text>
+                        {metaData.description}
                     </Text>
                     <Text  paddingTop="5" fontSize="lg">
                         By <span style={{backgroundColor: "yellow", color:"#000"}}>{metaData.payable_address}</span>
