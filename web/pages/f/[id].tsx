@@ -98,7 +98,7 @@ export default function Objekt() {
             console.log(decryptionKeyRes.data.decryptedFile);
             let link = document.createElement("a");
             link.href = decryptionKeyRes.data.decryptedFile;
-            link.download = `${metaData.filename}.png`;
+            link.download = `${metaData.filename}.pdf`;
             setButtonLoading(false);
             link.click();
         } catch (error) {
