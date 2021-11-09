@@ -1,7 +1,8 @@
 import React, { useRef } from "react";
 import AppLayout from "../components/AppLayout";
-import { Box, Button, createIcon, Icon, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, createIcon, Grid, Icon, Stack, Text } from "@chakra-ui/react";
 import Features from "../components/Features";
+import Link from "next/link";
 
 export default function Index() {
   return (
@@ -19,16 +20,17 @@ export default function Index() {
                   color={'gray.300'}
                   w={90}
                   position={'absolute'}
-                  right={"100px"}
-                  top={'40px'}
+                  right={"110px"}
+                  top={'50px'}
                 />
                 <Text
-                  fontSize={'lg'}
-                  fontFamily={'Caveat'}
+                  fontSize={'xl'}
                   position={'absolute'}
                   right={'50px'}
                   top={'-10px'}
-                  transform={'rotate(16deg)'}>
+                  className="annotated-text"
+                  transform={'rotate(16deg)'}
+                >
                   Think Gumroad <br /> but decentralised.
                 </Text>
               </Box>
@@ -40,6 +42,24 @@ export default function Index() {
       </Box>
 
       <Box mt="80px" padding="10px">
+        <Box textAlign="center" mb="80px">
+          <Grid templateColumns="repeat(2, 1fr)" gap={6}>
+            <Link href="/upload">
+              <Box maxWidth="80%" marginLeft="auto" marginRight="auto" cursor="pointer" color="#FFF" p="12" borderRadius="md" bgGradient="linear(to-l, #7928CA, #FF0080)">
+                <Text fontSize="xl">Keep 100% of your sales - <span style={{
+                  fontWeight: 'bold'
+                }}>Sell now!</span></Text>
+              </Box>
+            </Link>
+            <Link href="/f/2">
+              <Box maxWidth="80%" marginLeft="auto" marginRight="auto" cursor="pointer" color="#FFF" p="12" borderRadius="md" bgGradient="linear(to-l, #09c6f9, #045de9)">
+                <Text  fontSize="xl">Check out how it works by <span style={{
+                  fontWeight: "bold"
+                }}>Purchasing this demo file for 0 ETH</span></Text>
+              </Box>
+            </Link>
+          </Grid>
+        </Box>
         <Features />
       </Box>
     </AppLayout>

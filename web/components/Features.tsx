@@ -41,16 +41,16 @@ export default function Features() {
         />
         <Feature
           icon={<Icon as={FcDatabase} w={10} h={10} />}
-          title={'Decentralised - IPFS'}
+          title={'Decentralized & End-to-end Encrypted'}
           text={
-            'Kotaru.xyz leverages decentralised '
+            'Kotaru.xyz encrypts & stores products on IPFS - making them immutable, censorship resistant & avoiding unauthorized access.'
           }
         />
         <Feature
           icon={<Icon as={FcShare} w={10} h={10} />}
           title={'Peer-to-Peer'}
           text={
-            'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore...'
+            `There is no platform fee. Creators make 100% of their sales. Both the payments and content distribution is P2P.`
           }
         />
       </SimpleGrid>

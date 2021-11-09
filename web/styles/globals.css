@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Martel+Sans:wght@900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Kanit:wght@800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap");
 
 html,
 body {
@@ -31,15 +32,15 @@ a {
   width: 150px;
   height: 150px;
   text-align: center;
-  border-top: 5px solid;
+  border-top: 10px solid;
   border-image: linear-gradient(
       to right,
-      grey 25%,
-      yellow 25%,
-      yellow 50%,
-      red 50%,
-      red 75%,
-      teal 75%
+      #70f1f3 25%,
+      #f7f05b 25%,
+      #f7f05b 50%,
+      #e2452e 50%,
+      #e2452e 75%,
+      #71e94f 75%
     )
     5;
 }
@@ -47,4 +48,8 @@ a {
 .hero-text {
   font-family: "Kanit", sans-serif;
   text-transform: uppercase;
+}
+
+.annotated-text {
+  font-family: "Patrick Hand", cursive;
 }

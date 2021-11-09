@@ -48,11 +48,12 @@ const SocialButton = ({
 export default function Footer() {
   return (
     <Box
-      color={"white"}
+      color="#000000"
       maxWidth="1200px"
       marginRight="auto"
       marginLeft="auto"
       width="100%"
+      bgColor="#ffffff"
     >
       <Container
         as={Stack}
