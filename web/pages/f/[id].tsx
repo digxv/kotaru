@@ -1,6 +1,6 @@
 import Head from "next/head";
 import AppLayout from "../../components/AppLayout";
-import { Input, Box, Textarea, Text, Spacer, NumberInput, NumberInputField, InputGroup, InputRightAddon, Button, Link } from "@chakra-ui/react";
+import { Input, Box, Textarea, Text, Spacer, NumberInput, NumberInputField, InputGroup, InputRightAddon, Button, Link, Spinner } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import CryptoJS from "crypto-js";
 import { WalletContext } from "../../utils/walletContext";
@@ -158,7 +158,7 @@ export default function Objekt() {
                     </Button>
                 </>
                 :
-                <Text fontSize="xl">Loading...</Text>
+                <Spinner size="lg" />
                 }
             </Box>
         </AppLayout>
