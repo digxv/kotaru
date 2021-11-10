@@ -66,7 +66,7 @@ export default function Index() {
                 }}>Sell now!</span></Text>
               </Box>
             </Link>
-            <Link href="/f/2">
+            <Link href="/f/12">
               <Box maxWidth="80%" marginLeft="auto" marginRight="auto" cursor="pointer" color="#FFF" p="12" borderRadius="md" bgGradient="linear(to-l, #09c6f9, #045de9)">
                 <Text  fontSize="xl">Check out how it works by <span style={{
                   fontWeight: "bold"
