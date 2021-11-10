@@ -47,7 +47,7 @@ export default async (req, response) => {
             if(signingAddress === downloadBlock.buyer) {
                 let url=`https://ipfs.io/ipfs/${objekt.ipfs_uri.substr(7)}`;
                 let objekt_metadata = (await axios.get(url)).data;
-                let decrypted = CryptoJS.AES.decrypt(objekt_metadata.decryption_key, "M&B&*#>*5X-sW27Ux)aH['A");
+                let decrypted = CryptoJS.AES.decrypt(objekt_metadata.decryption_key, process.env.KEY_THAT_DO_WONDERS);
                 let decryptedString = decrypted.toString(CryptoJS.enc.Utf8);
                 
                 // use the decryptedString to decrypt the file and return
