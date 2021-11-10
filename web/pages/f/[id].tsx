@@ -47,7 +47,7 @@ export default function Objekt() {
             const objektBlock = await contract.methods.objekts(id).call();
             setDownloads(objektBlock.downloads);
             const Http = new XMLHttpRequest();
-            const url=`https://gateway.pinata.cloud/ipfs/${objektBlock.ipfs_uri.substr(7)}`;
+            const url=`https://ipfs.io/ipfs/${objektBlock.ipfs_uri.substr(7)}`;
             Http.open("GET", url);
             Http.send();
             Http.onloadend = async (e) => {
@@ -88,8 +88,8 @@ export default function Objekt() {
         try {
             let randomStringRes = await axios.post("/api/generateRandomString", {
                 download_id: download_id
-            })
-    
+            });
+
             let signature = await web3Context.eth.personal.sign(randomStringRes.data.string, walletState.address, "");
     
             let decryptionKeyRes = await axios.post("/api/getDecryptionKey", {

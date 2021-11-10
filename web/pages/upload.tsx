@@ -118,6 +118,9 @@ export default function Upload() {
                 paddingRight={[2, 5, 8]}
                 paddingLeft={[2, 5, 8]}
             >
+                <Box bgColor="green.300" maxWidth="800px" borderRadius="md" p="4" mb="5">
+                    Kotaru.xyz is experimental & a new smart contract will be deployed soon. Reach out on Twitter @kotaruxyz to get started as a creator.
+                </Box>
                 {
                     ready.success
                     ?

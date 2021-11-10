@@ -9,6 +9,8 @@ let XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 export default async (req, response) => {
     if(req.method === "POST") {
+        console.log(process.env.KEY_THAT_DO_WONDERS);
+
         let firebaseConfig = {
             apiKey: process.env.FB_API_KEY,
             authDomain: process.env.AUTH_DOMAIN,

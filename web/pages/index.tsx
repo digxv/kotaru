@@ -1,10 +1,24 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import AppLayout from "../components/AppLayout";
-import { Box, Button, createIcon, Grid, Icon, Stack, Text } from "@chakra-ui/react";
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, Code, createIcon, Grid, Icon, Stack, Text, useToast } from "@chakra-ui/react";
 import Features from "../components/Features";
 import Link from "next/link";
 
 export default function Index() {
+
+  // const toast = useToast();
+
+  // useEffect(() => {
+  //   toast({
+  //     title: "It's experimental.",
+  //     description: "Kotaru.xyz is a WIP, stay tuned on Twitter to know when it releases.",
+  //     status: "info",
+  //     position: "bottom-right",
+  //     duration: 1000000,
+  //     isClosable: true,
+  //   })
+  // }, []);
+
   return (
     <AppLayout pageTitle="Kotaru.xyz">
       <Box color="#fff" textAlign="center">
@@ -38,6 +52,7 @@ export default function Index() {
             <Text bgGradient="linear(to-l, #7928CA, #FF0080)"
             bgClip="text" display="inline" className="hero-text" lineHeight="shorter" fontWeight="bold" letterSpacing="2px" fontSize="5xl"> on-chain.</Text>
             </Text>
+            <Code>(RINKEYBY) 0xe1EBD03808a6C080350501140Ac8Cf9740F6Ba47</Code>
         </Stack>
       </Box>
 
@@ -62,6 +77,10 @@ export default function Index() {
         </Box>
         <Features />
       </Box>
+
+      {/* <Box borderRadius={2} bgColor="gray.700" mt="80px" color="white" padding="10" textAlign="center" mb="80px">
+        <Text>Rinkeby testnet: </Text>
+      </Box> */}
     </AppLayout>
   )
 }

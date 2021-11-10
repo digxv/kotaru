@@ -35,6 +35,7 @@ export default function Header({accountAddress, accountBalance}) {
       width="100%"
       zIndex="1000"
       className="fancy-border"
+      backgroundColor="black"
     >
       <Box
         maxWidth="1200px"
