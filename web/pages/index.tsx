@@ -53,7 +53,7 @@ export default function Index() {
             <Text bgGradient="linear(to-l, #7928CA, #FF0080)"
             bgClip="text" display="inline" className="hero-text" lineHeight="shorter" fontWeight="bold" letterSpacing="2px" fontSize="5xl"> on-chain.</Text>
             </Text>
-            <Code>(RINKEYBY) 0xe1EBD03808a6C080350501140Ac8Cf9740F6Ba47</Code>
+            <Code>SWITCH TO RINKEBY TESTNET</Code>
         </Stack>
       </Box>
 
