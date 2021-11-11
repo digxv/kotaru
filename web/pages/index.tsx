@@ -3,6 +3,7 @@ import AppLayout from "../components/AppLayout";
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, Code, createIcon, Grid, Icon, Stack, Text, useToast } from "@chakra-ui/react";
 import Features from "../components/Features";
 import Link from "next/link";
+import { FaArrowRight } from "react-icons/fa";
 
 export default function Index() {
 
@@ -78,9 +79,28 @@ export default function Index() {
         <Features />
       </Box>
 
-      {/* <Box borderRadius={2} bgColor="gray.700" mt="80px" color="white" padding="10" textAlign="center" mb="80px">
-        <Text>Rinkeby testnet: </Text>
-      </Box> */}
+      <Box borderRadius={2} mt="80px" color="white" padding="10" textAlign="center" mb="80px">
+        <Button
+            paddingTop="32px"
+            paddingBottom="32px"
+            paddingRight="50px"
+            paddingLeft="50px"
+            bgGradient="linear(to-l, #09c6f9, #045de9)"
+            color="#ffffff"
+            _hover={{ bgGradient: "linear(to-l, #00a0cc, #045de9)" }}
+            _active={{ bgGradient: "linear(to-l, #00a0cc, #045de9)" }}
+            _focus={{ bgGradient: "linear(to-l, #00a0cc, #045de9)" }}
+            as="a"
+            href="https://kotaru.ck.page/7dde0f30ba"
+            target="_blank"
+            fontWeight="normal"
+            fontSize="xl"
+        >
+          <span style={{
+            marginRight: "10px"
+          }}>Join Waitlist</span> <FaArrowRight />
+        </Button>
+      </Box>
     </AppLayout>
   )
 }
