@@ -127,6 +127,9 @@ export default function Objekt() {
                 paddingLeft={[2, 5, 8]}
                 color="white"
             >
+                <Box bgColor="green.300" maxWidth="800px" borderRadius="md" p="4" mb="5">
+                    Kotaru.xyz is experimental & a new smart contract will be deployed soon. File below is meant to demonstrate how the platform works.
+                </Box>
                 {loaded
                 ?
                 <>
