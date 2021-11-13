@@ -100,6 +100,7 @@ export default function Objekt() {
 
             if (metaData._link !== undefined) {
                 window.open(decryptionKeyRes.data.decryptedLink, '_blank');
+                setButtonLoading(false);
             } else {
                 let link = document.createElement("a");
                 link.href = decryptionKeyRes.data.decryptedFile;
