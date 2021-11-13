@@ -1,6 +1,6 @@
 import Head from "next/head";
 import AppLayout from "../components/AppLayout";
-import { Input, Box, Textarea, Text, Spacer, NumberInput, NumberInputField, InputGroup, InputRightAddon, Button, Link } from "@chakra-ui/react";
+import { Input, Box, Textarea, Text, Spacer, NumberInput, NumberInputField, InputGroup, InputRightAddon, Button, Link, Tabs, TabList, Tab, TabPanel, TabPanels } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import CryptoJS from "crypto-js";
 import { WalletContext } from "../utils/walletContext";
@@ -21,6 +21,7 @@ export default function Upload() {
     const [description, setDescription] = useState("");
     const [price, setPrice]: any = useState(0);
     const [file, setFile]: any = useState();
+    const [link, setLink]: any = useState("");
     const [formError, setFormError] = useState(false);
     // other state to make everything easy going
     const [uploading, setUploading] = useState(false);
@@ -29,16 +30,28 @@ export default function Upload() {
         id: ""
     });
 
-    // all logic to encrypt & upload stuff
     const EncryptUploadClick = () => {
         setUploading(true)
-        if (filename.trim().length !== 0 && description.trim().length !== 0 && price.toString().length !== 0 && file !== undefined) {
-            setFormError(false);
-            let reader = new FileReader();
-            reader.onload = (e) => {
-                processFile(e);
+        if (filename.trim().length !== 0 && description.trim().length !== 0 && price.toString().length !== 0) {
+            if (file !== undefined) {
+                setFormError(false);
+                let reader = new FileReader();
+                reader.onload = (e) => {
+                    processFile(e);
+                }
+                reader.readAsDataURL(file);
+            } else if (link.trim().length !== 0) {
+                if (link.startsWith("http")) {
+                    setFormError(false);
+                    processLink();
+                } else {
+                    setFormError(true);
+                    setUploading(false);
+                }
+            } else {
+                setFormError(true);
+                setUploading(false);
             }
-            reader.readAsDataURL(file);
         } else {
             setFormError(true);
             setUploading(false);
@@ -49,10 +62,10 @@ export default function Upload() {
         try {
             let passphrase = Math.random().toString(36);
             let encrypted = CryptoJS.AES.encrypt(e.target.result, passphrase);
-            let link = document.createElement("a");
-            link.href = `data:application/octet-stream,${encrypted}`;
-            link.download = "kotaru.encrypted";
-            document.body.appendChild(link);
+            let linkEncryptedFile = document.createElement("a");
+            linkEncryptedFile.href = `data:application/octet-stream,${encrypted}`;
+            linkEncryptedFile.download = "kotaru.encrypted";
+            document.body.appendChild(linkEncryptedFile);
             const { cid } = await ipfs.add(urlSource(`data:application/octet-stream,${encrypted}`));
 
             let pfObjekt = await axios.post("/api/pinFile", {
@@ -73,11 +86,39 @@ export default function Upload() {
                 payable_address: walletState.address,
                 value: value,
                 filename: filename,
-                description: description
+                description: description,
+                file_extension: file.name.split('.').pop()
             }
 
             finalMetaUpload(JSON_meta);
             
+        } catch (error) {
+            console.error(error);
+            setUploading(false);
+        }
+    }
+
+    const processLink = async () => {
+        try {
+            let passphrase = Math.random().toString(36);
+            let encrypted = CryptoJS.AES.encrypt(link, passphrase);
+
+            let encryptStringRes = await axios.post("/api/encryptString", {
+                string: passphrase
+            });
+
+            let value = await web3Context.utils.toWei(price, "ether");
+
+            let JSON_meta = {
+                decryption_key: encryptStringRes.data.encryptedString,
+                _link: `${encrypted}`,
+                payable_address: walletState.address,
+                value: value,
+                filename: filename,
+                description: description
+            }
+
+            finalMetaUpload(JSON_meta);
         } catch (error) {
             console.error(error);
             setUploading(false);
@@ -134,7 +175,7 @@ export default function Upload() {
                         {formError ? <Box color="#ffffff" p="3" borderRadius="5" marginBottom="8" bg="red">Fill in all the information!</Box> : null}
                         <Input
                             bg="#E8E8E8"
-                            placeholder="Filename"
+                            placeholder="Name"
                             variant="filled"
                             paddingTop="25px"
                             paddingBottom="25px"
@@ -172,11 +213,35 @@ export default function Upload() {
                                 children="ETH"
                             />
                         </InputGroup>
-                        <Input
-                            marginTop="5"
-                            type="file"
-                            onChange={(e) => setFile(e.target.files[0])}
-                        />
+
+                        <Tabs marginTop="5" isFitted>
+                            <TabList>
+                                <Tab>Link</Tab>
+                                <Tab>Upload</Tab>
+                            </TabList>
+
+                            <TabPanels>
+                                <TabPanel>
+                                    <Input
+                                        bg="#E8E8E8"
+                                        placeholder="Paste an URL"
+                                        variant="filled"
+                                        _hover={{ bg: "#E8E8E8" }}
+                                        _focus={{ bg: "#E8E8E8" }}
+                                        _placeholder={{ color: "#707070" }}
+                                        onChange={(e) => setLink(e.target.value)}
+                                    />
+                                </TabPanel>
+                                <TabPanel>
+                                    <Input
+                                        marginTop="5"
+                                        type="file"
+                                        onChange={(e) => setFile(e.target.files[0])}
+                                    />
+                                </TabPanel>
+                            </TabPanels>
+                        </Tabs>
+                        
                         <Button
                             paddingTop="25px"
                             paddingBottom="25px"

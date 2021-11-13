@@ -53,15 +53,22 @@ export default async (req, response) => {
                 let decryptedString = decrypted.toString(CryptoJS.enc.Utf8);
                 
                 // use the decryptedString to decrypt the file and return
-                let file_url = `https://ipfs.io/ipfs/${objekt_metadata.encrypted_file_cid}`;
-                console.log(file_url);
-                let encryptedFile = (await axios.get(file_url)).data;
-                let decryptedFile = CryptoJS.AES.decrypt(encryptedFile, decryptedString).toString(CryptoJS.enc.Latin1);
 
-                return response.status(200).json({
-                    decrypted: decryptedString,
-                    decryptedFile: decryptedFile
-                });
+                if(objekt_metadata._link !== undefined) {
+                    let decryptedLink = CryptoJS.AES.decrypt(objekt_metadata._link, decryptedString).toString(CryptoJS.enc.Latin1);
+                    return response.status(200).json({
+                        decryptedLink: decryptedLink
+                    });
+                } else {
+                    let file_url = `https://ipfs.io/ipfs/${objekt_metadata.encrypted_file_cid}`;
+                    console.log(file_url);
+                    let encryptedFile = (await axios.get(file_url)).data;
+                    let decryptedFile = CryptoJS.AES.decrypt(encryptedFile, decryptedString).toString(CryptoJS.enc.Latin1);
+
+                    return response.status(200).json({
+                        decryptedFile: decryptedFile
+                    });
+                }
             } else {
                 return response.status(400).json({
                     msg: "UNAUTHENTICATED"

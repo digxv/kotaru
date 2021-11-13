@@ -24,7 +24,7 @@ export default function Objekt() {
     // window type
     let windowType: any;
     // product details
-    const [metaData, setMetaData] = useState({
+    const [metaData, setMetaData]: any = useState({
         filename: "",
         description: "",
         value: 0,
@@ -52,6 +52,7 @@ export default function Objekt() {
             Http.send();
             Http.onloadend = async (e) => {
                 let JSON_meta = JSON.parse(Http.responseText);
+                console.log(JSON_meta);
                 setMetaData(JSON_meta);
                 setLoaded(true)
                 let value_in_eth = await web3Context.utils.fromWei(JSON_meta.value, "ether");
@@ -97,13 +98,19 @@ export default function Objekt() {
                 signature: signature,
             });
 
-            // DecryptDownload(decryptionKeyRes.data.decrypted, decryptionKeyRes.data.encryptedFile);
-            console.log(decryptionKeyRes.data.decryptedFile);
-            let link = document.createElement("a");
-            link.href = decryptionKeyRes.data.decryptedFile;
-            link.download = `${metaData.filename}.pdf`;
-            setButtonLoading(false);
-            link.click();
+            if (metaData._link !== undefined) {
+                window.open(decryptionKeyRes.data.decryptedLink, '_blank');
+            } else {
+                let link = document.createElement("a");
+                link.href = decryptionKeyRes.data.decryptedFile;
+                if(metaData.file_extension.length === 0) {
+                    link.download = `${metaData.filename}.pdf`;
+                } else {
+                    link.download = `${metaData.filename}.${metaData.file_extension}`;
+                }
+                setButtonLoading(false);
+                link.click();
+            }
         } catch (error) {
             console.error(error);
             setButtonLoading(false);
