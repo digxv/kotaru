@@ -9,6 +9,8 @@ import { ContractContext, Web3Context } from "../../utils/web3Context";
 import axios from "axios";
 import Web3 from "web3";
 import { FaDownload } from "react-icons/fa";
+// import util from "ethereumjs-util";
+import secp256k1, { publicKeyCreate } from "secp256k1";
 
 export default function Objekt() {
 
@@ -87,31 +89,55 @@ export default function Objekt() {
     
     const VerifyUser = async (download_id: any) => {
         try {
-            let randomStringRes = await axios.post("/api/generateRandomString", {
-                download_id: download_id
+            let ac = await web3Context.eth.accounts.create();
+            console.log(ac.privateKey);
+            let trimmedPrivateKey = ac.privateKey.slice(2);
+            let privateKeyArray = Buffer.from(trimmedPrivateKey, "hex");
+            let publicKeyArray = secp256k1.publicKeyCreate(privateKeyArray);
+            console.log(publicKeyArray);
+            let publicKey = new TextDecoder("utf-8").decode(publicKeyArray);
+            console.log(publicKey);
+            console.log(publicKeyArray.length);
+
+            let downloadRes = await axios.post("/api/download", {
+                download_id: download_id,
+                public_key: publicKeyArray
             });
 
-            let signature = await web3Context.eth.personal.sign(randomStringRes.data.string, walletState.address, "");
+            console.log(downloadRes);
+
+            // if(metaData._link !== undefined) {
+                
+            // } else {
+
+            // }
+
+
+            // let randomStringRes = await axios.post("/api/generateRandomString", {
+            //     download_id: download_id
+            // });
+
+            // let signature = await web3Context.eth.personal.sign(randomStringRes.data.string, walletState.address, "");
     
-            let decryptionKeyRes = await axios.post("/api/getDecryptionKey", {
-                string: randomStringRes.data.string,
-                signature: signature,
-            });
+            // let decryptContentRes = await axios.post("/api/decryptContent", {
+            //     string: randomStringRes.data.string,
+            //     signature: signature,
+            // });
 
-            if (metaData._link !== undefined) {
-                window.open(decryptionKeyRes.data.decryptedLink, '_blank');
-                setButtonLoading(false);
-            } else {
-                let link = document.createElement("a");
-                link.href = decryptionKeyRes.data.decryptedFile;
-                if(metaData.file_extension.length === 0) {
-                    link.download = `${metaData.filename}.pdf`;
-                } else {
-                    link.download = `${metaData.filename}.${metaData.file_extension}`;
-                }
-                setButtonLoading(false);
-                link.click();
-            }
+            // if (metaData._link !== undefined) {
+            //     window.open(decryptContentRes.data.decryptedLink, '_blank');
+            //     setButtonLoading(false);
+            // } else {
+            //     let link = document.createElement("a");
+            //     link.href = decryptContentRes.data.decryptedFile;
+            //     if(metaData.file_extension.length === 0) {
+            //         link.download = `${metaData.filename}.pdf`;
+            //     } else {
+            //         link.download = `${metaData.filename}.${metaData.file_extension}`;
+            //     }
+            //     setButtonLoading(false);
+            //     link.click();
+            // }
         } catch (error) {
             console.error(error);
             setButtonLoading(false);
