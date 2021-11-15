@@ -14,18 +14,13 @@ import secp256k1, { publicKeyCreate } from "secp256k1";
 
 export default function Objekt() {
 
-    // url params
     const router = useRouter();
     const { id } = router.query;
 
-    // wallet context
     const [walletState, setWalletState]: any = useContext(WalletContext);
-    // web3 context
     const [web3Context, setWeb3Context]: any = useContext(Web3Context);
     const [contract, setContract]: any = useContext(ContractContext);
-    // window type
-    let windowType: any;
-    // product details
+
     const [metaData, setMetaData]: any = useState({
         filename: "",
         description: "",
@@ -40,7 +35,6 @@ export default function Objekt() {
     const [buttonLoading, setButtonLoading] = useState(false);
 
     useEffect(() => {
-        windowType = window;
         LoadObjekt();
     }, [id, contract]);
 
@@ -77,67 +71,44 @@ export default function Objekt() {
         let filterDownloads = downloads.filter(download => download.objekt_id === id && download.buyer.toLowerCase() === walletState.address.toLowerCase());
 
         if(filterDownloads.length > 0) {
-            console.log(filterDownloads[0].id);
             VerifyUser(filterDownloads[0].id);
         } else {
             buyObjektCall().then(res => {
-                console.log(res.events.ObjektBought.returnValues.id);
                 VerifyUser(res.events.ObjektBought.returnValues.id);
             });
         }
     }
     
     const VerifyUser = async (download_id: any) => {
-        try {
-            let ac = await web3Context.eth.accounts.create();
-            console.log(ac.privateKey);
-            let trimmedPrivateKey = ac.privateKey.slice(2);
-            let privateKeyArray = Buffer.from(trimmedPrivateKey, "hex");
-            let publicKeyArray = secp256k1.publicKeyCreate(privateKeyArray);
-            console.log(publicKeyArray);
-            let publicKey = new TextDecoder("utf-8").decode(publicKeyArray);
-            console.log(publicKey);
-            console.log(publicKeyArray.length);
+        let windowType: any = window;
+        let provider: any = windowType.ethereum;
 
-            let downloadRes = await axios.post("/api/download", {
-                download_id: download_id,
-                public_key: publicKeyArray
+        try {
+            let randomStringRes = await axios.post("/api/generateRandomString", {
+                download_id: download_id
             });
 
-            console.log(downloadRes);
-
-            // if(metaData._link !== undefined) {
-                
-            // } else {
-
-            // }
-
-
-            // let randomStringRes = await axios.post("/api/generateRandomString", {
-            //     download_id: download_id
-            // });
-
-            // let signature = await web3Context.eth.personal.sign(randomStringRes.data.string, walletState.address, "");
+            let signature = await web3Context.eth.personal.sign(randomStringRes.data.string, walletState.address, "");
     
-            // let decryptContentRes = await axios.post("/api/decryptContent", {
-            //     string: randomStringRes.data.string,
-            //     signature: signature,
-            // });
+            let decryptContentRes = await axios.post("/api/decryptContent", {
+                string: randomStringRes.data.string,
+                signature: signature,
+            });
 
-            // if (metaData._link !== undefined) {
-            //     window.open(decryptContentRes.data.decryptedLink, '_blank');
-            //     setButtonLoading(false);
-            // } else {
-            //     let link = document.createElement("a");
-            //     link.href = decryptContentRes.data.decryptedFile;
-            //     if(metaData.file_extension.length === 0) {
-            //         link.download = `${metaData.filename}.pdf`;
-            //     } else {
-            //         link.download = `${metaData.filename}.${metaData.file_extension}`;
-            //     }
-            //     setButtonLoading(false);
-            //     link.click();
-            // }
+            if (metaData._link !== undefined) {
+                window.open(decryptContentRes.data.decryptedLink, '_blank');
+                setButtonLoading(false);
+            } else {
+                let link = document.createElement("a");
+                link.href = decryptContentRes.data.decryptedFile;
+                if(metaData.file_extension.length === 0) {
+                    link.download = `${metaData.filename}.pdf`;
+                } else {
+                    link.download = `${metaData.filename}.${metaData.file_extension}`;
+                }
+                setButtonLoading(false);
+                link.click();
+            }
         } catch (error) {
             console.error(error);
             setButtonLoading(false);
