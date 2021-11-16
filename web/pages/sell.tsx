@@ -9,7 +9,7 @@ import { urlSource } from "ipfs-http-client";
 import { ContractContext, Web3Context } from "../utils/web3Context";
 import axios from "axios";
 
-export default function Upload() {
+export default function Sell() {
 
     const [web3Context, setWeb3Context]: any = useContext(Web3Context);
     const [contract, setContract]: any = useContext(ContractContext);
