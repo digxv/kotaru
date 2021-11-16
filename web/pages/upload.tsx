@@ -1,6 +1,6 @@
 import Head from "next/head";
 import AppLayout from "../components/AppLayout";
-import { Input, Box, Textarea, Text, Spacer, NumberInput, NumberInputField, InputGroup, InputRightAddon, Button, Link, Tabs, TabList, Tab, TabPanel, TabPanels } from "@chakra-ui/react";
+import { Input, Box, Textarea, Text, Spacer, NumberInput, NumberInputField, InputGroup, InputRightAddon, Button, Link, Tabs, TabList, Tab, TabPanel, TabPanels, Grid } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import CryptoJS from "crypto-js";
 import { WalletContext } from "../utils/walletContext";
@@ -209,93 +209,166 @@ export default function Upload() {
                         <Link href={`/f/${ready.id}`} target="_blank" ><Text color="white" letterSpacing="wider" fontWeight="bold" borderRadius="sm" padding="2" bg="blue.400" fontSize="xl">https://kotaru.xyz/f/{ready.id}</Text></Link>
                     </Box>
                     :
-                    <>
+                    <Box borderRadius="xl">
                         {formError ? <Box color="#ffffff" p="3" borderRadius="5" marginBottom="8" bg="red">Fill in all the information!</Box> : null}
-                        <Input
-                            bg="#E8E8E8"
-                            placeholder="Name"
-                            variant="filled"
-                            paddingTop="25px"
-                            paddingBottom="25px"
-                            _hover={{ bg: "#E8E8E8" }}
-                            _focus={{ bg: "#E8E8E8" }}
-                            _placeholder={{ color: "#707070" }}
-                            onChange={(e) => setFilename(e.target.value)}
-                        />
-                        <Textarea
-                            bg="#E8E8E8"
-                            placeholder="Description"
-                            variant="filled"
-                            marginTop="5"
-                            _hover={{ bg: "#E8E8E8" }}
-                            _focus={{ bg: "#E8E8E8" }}
-                            _placeholder={{ color: "#707070" }}
-                            onChange={(e) => setDescription(e.target.value)}
-                        />
-                        <InputGroup
-                            marginTop="5"
-                        >
+                        <Box borderTopRadius="xl" borderRadius="xl" bg="#E8E8E8">
                             <Input
                                 bg="#E8E8E8"
-                                type="number"
-                                placeholder="Price"
+                                placeholder="Name"
+                                borderRadius="xl"
                                 variant="filled"
+                                paddingTop="25px"
+                                paddingBottom="25px"
                                 _hover={{ bg: "#E8E8E8" }}
                                 _focus={{ bg: "#E8E8E8" }}
                                 _placeholder={{ color: "#707070" }}
-                                onChange={(e) => setPrice(e.target.value)}
+                                onChange={(e) => setFilename(e.target.value)}
                             />
-                            <InputRightAddon
-                                background="#000000"
-                                color="#ffffff"
-                                children="ETH"
+
+                            <Box border="1px #bbb solid" />
+
+                            <Textarea
+                                bg="#E8E8E8"
+                                placeholder="Description"
+                                variant="filled"
+                                paddingTop="25px"
+                                _hover={{ bg: "#E8E8E8" }}
+                                _focus={{ bg: "#E8E8E8" }}
+                                _placeholder={{ color: "#707070" }}
+                                onChange={(e) => setDescription(e.target.value)}
                             />
-                        </InputGroup>
 
-                        <Tabs marginTop="5" isFitted>
-                            <TabList>
-                                <Tab>Link</Tab>
-                                <Tab>Upload</Tab>
-                            </TabList>
+                            {/* <Box border="2px #bbb solid" /> */}
+                            
+                        </Box>
 
-                            <TabPanels>
-                                <TabPanel>
+                        <Box mt="5" borderRadius="xl" bg="#E8E8E8">
+                            <Tabs marginTop="5" isFitted>
+                                <TabList>
+                                    <Tab>Link</Tab>
+                                    <Tab>Upload</Tab>
+                                </TabList>
+
+                                <TabPanels padding="0">
+                                    <TabPanel padding="0">
+                                        <Input
+                                            bg="#E8E8E8"
+                                            placeholder="Paste an URL"
+                                            variant="filled"
+                                            _hover={{ bg: "#E8E8E8" }}
+                                            _focus={{ bg: "#E8E8E8" }}
+                                            _placeholder={{ color: "#707070" }}
+                                            onChange={(e) => setLink(e.target.value)}
+                                            paddingBottom="25px"
+                                            paddingTop="25px"
+                                            borderRadius="xl"
+                                        />
+                                    </TabPanel>
+                                    <TabPanel padding="0">
+                                        <Input
+                                            marginTop="5"
+                                            type="file"
+                                            onChange={(e) => setFile(e.target.files[0])}
+                                            borderRadius="xl"
+                                        />
+                                    </TabPanel>
+                                </TabPanels>
+                            </Tabs>
+                        </Box>
+                        
+                        <Box border="0" mt="5" borderRadius="xl" bg="#E8E8E8">
+
+                            {/* <Grid width="100%" templateColumns="repeat(2, 1fr)">
+                                <InputGroup
+                                    marginTop="5"
+                                >
                                     <Input
                                         bg="#E8E8E8"
-                                        placeholder="Paste an URL"
+                                        type="number"
+                                        placeholder="Price"
                                         variant="filled"
                                         _hover={{ bg: "#E8E8E8" }}
                                         _focus={{ bg: "#E8E8E8" }}
                                         _placeholder={{ color: "#707070" }}
-                                        onChange={(e) => setLink(e.target.value)}
+                                        onChange={(e) => setPrice(e.target.value)}
                                     />
-                                </TabPanel>
-                                <TabPanel>
+                                    <InputRightAddon
+                                        background="#000000"
+                                        color="#ffffff"
+                                        children="ETH"
+                                    />
+                                </InputGroup>
+                                <InputGroup
+                                    marginTop="5"
+                                >
                                     <Input
-                                        marginTop="5"
-                                        type="file"
-                                        onChange={(e) => setFile(e.target.files[0])}
+                                        bg="#E8E8E8"
+                                        type="number"
+                                        placeholder="Royalty"
+                                        variant="filled"
+                                        _hover={{ bg: "#E8E8E8" }}
+                                        _focus={{ bg: "#E8E8E8" }}
+                                        _placeholder={{ color: "#707070" }}
+                                        onChange={(e) => setPrice(e.target.value)}
                                     />
-                                </TabPanel>
-                            </TabPanels>
-                        </Tabs>
-                        
-                        <Button
-                            paddingTop="25px"
-                            paddingBottom="25px"
-                            marginTop="5"
-                            width="100%"
-                            cursor={uploading.isLoading ? "wait" : "pointer"}
-                            backgroundColor="gray.900"
-                            color="#ffffff"
-                            _hover={{ bg: "gray.900" }}
-                            _active={{ bg: "gray.900" }}
-                            _focus={{ bg: "gray.900" }}
-                            onClick={() => {uploading.isLoading ? null : EncryptUploadClick()}}
-                        >
-                            {uploading.isLoading ? uploading.text : "Upload"}
-                        </Button>
-                    </>
+                                    <InputRightAddon
+                                        background="#000000"
+                                        color="#ffffff"
+                                        children="%"
+                                    />
+                                </InputGroup>
+                            </Grid> */}
+
+                            <InputGroup
+                                marginTop="5"
+                                borderTopRadius="xl"
+                            >
+                                <Input
+                                    bg="#E8E8E8"
+                                    type="number"
+                                    placeholder="Price"
+                                    variant="filled"
+                                    _hover={{ bg: "#E8E8E8" }}
+                                    _focus={{ bg: "#E8E8E8" }}
+                                    _placeholder={{ color: "#707070" }}
+                                    onChange={(e) => setPrice(e.target.value)}
+                                    paddingBottom="25px"
+                                    paddingTop="25px"
+                                    border="0"
+                                />
+                                <InputRightAddon
+                                    background="gray.900"
+                                    color="#ffffff"
+                                    children="ETH"
+                                    paddingBottom="25px"
+                                    paddingTop="25px"
+                                    border="0"
+                                    borderBottomRightRadius="0"
+                                />
+                            </InputGroup>
+
+                            <Button
+                                borderTopRadius="0"
+                                borderBottomRadius="xl"
+                                paddingTop="25px"
+                                paddingBottom="25px"
+                                // marginTop="5"
+                                width="100%"
+                                cursor={uploading.isLoading ? "wait" : "pointer"}
+                                bgGradient="linear(to-l, #09c6f9, #045de9)"
+                                color="#ffffff"
+                                _hover={{bgGradient: "linear(to-l, #09c6f9, #045de9)"}}
+                                _active={{bgGradient: "linear(to-l, #09c6f9, #045de9)"}}
+                                _focus={{bgGradient: "linear(to-l, #09c6f9, #045de9)"}}
+                                onClick={() => {uploading.isLoading ? null : EncryptUploadClick()}}
+                                textTransform="uppercase"
+                                letterSpacing="1.2px"
+                                fontSize="lg"
+                            >
+                                {uploading.isLoading ? uploading.text : "Upload"}
+                            </Button>
+                        </Box>
+                    </Box>
                 }
             </Box>
         </AppLayout>
