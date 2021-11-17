@@ -8,6 +8,10 @@ import ipfs from "../utils/ipfs";
 import { urlSource } from "ipfs-http-client";
 import { ContractContext, Web3Context } from "../utils/web3Context";
 import axios from "axios";
+import { ThirdwebSDK } from "@3rdweb/sdk";
+import { useEthers } from "@usedapp/core";
+import { ethers } from "ethers";
+import { thirdWeb } from "../utils/thirdWeb";
 
 export default function Sell() {
 
@@ -33,6 +37,8 @@ export default function Sell() {
         id: ""
     });
 
+    const { library } = useEthers();
+ 
     const EncryptUploadClick = () => {
         setUploading({
             isLoading: true,
@@ -180,9 +186,12 @@ export default function Sell() {
             //     console.error(err)
             // })
 
-            let addReqResponse = await axios.post("/api/add", {
+            // let addReqResponse = await axios.post("/api/add", {
                 
-            })
+            // })
+
+            
+
         } catch (error) {
             console.error(error);
             setUploading({
@@ -192,6 +201,27 @@ export default function Sell() {
         }
     }
 
+    const randomClick = async () => {
+        // let deploy = thirdWeb.getAppModule("0xf2D78D0485Cb74f6D9127F8499d0220865911735").deployNftModule({
+        //     name: "Random Name",
+        //     description: "Random Description",
+        //     symbol: "DIG",
+        //     feeRecipient: walletState.address,
+        //     sellerFeeBasisPoints: 100
+        // });
+
+        // console.log((await deploy).getMetadata);
+
+        let NFT = thirdWeb.getNFTModule(`0xf2D78D0485Cb74f6D9127F8499d0220865911735`);
+
+        let token = await NFT.mintTo(walletState.address, {
+            name: "smth",
+            description: "smth"
+        })
+
+        console.log(token);
+    }
+ 
     const publishObjekt = async (ipfs_hash: string, name: string, price: number) => {
         return contract.methods.publishObjekt(name, ipfs_hash, price).send({from: walletState.address});
     }
@@ -355,6 +385,10 @@ export default function Sell() {
                                 fontSize="lg"
                             >
                                 {uploading.isLoading ? uploading.text : "Mint"}
+                            </Button>
+
+                            <Button onClick={() => randomClick()}>
+                                Click
                             </Button>
                         </Box>
                     </Box>

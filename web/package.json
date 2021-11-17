@@ -18,6 +18,7 @@
     "@fontsource/open-sans": "^4.4.5",
     "@metamask/eth-sig-util": "^4.0.0",
     "@pinata/sdk": "^1.1.23",
+    "@usedapp/core": "^0.5.5",
     "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
     "convertkit-react": "^1.5.5",

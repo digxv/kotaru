@@ -7,11 +7,13 @@ import { WalletContext } from "../utils/walletContext";
 import Footer from "./Footer";
 import { ContractContext, Web3Context } from "../utils/web3Context";
 import ContractJSON from "../../artifacts/contracts/Kotaru.sol/Kotaru.json";
+import { ethers } from "@usedapp/core/node_modules/ethers";
+import { ThirdwebSDK } from "@3rdweb/sdk";
+import { initThirdWeb } from "../utils/thirdWeb";
 
 export default function AppLayout ({ children, pageTitle }) {
     let windowType: any;
     let web3: any;
-    let provider: any;
 
     const [isLoggedIn, setIsLoggedIn] = useState(undefined);
     const [accountAddress, setAccountAddress] = useState("");
@@ -23,7 +25,6 @@ export default function AppLayout ({ children, pageTitle }) {
 
     useEffect(() => {
         windowType = window;
-        provider = windowType.ethereum;
 
         if (typeof windowType.ethereum !== "undefined") {
             loadAccounts();
@@ -33,26 +34,31 @@ export default function AppLayout ({ children, pageTitle }) {
     }, [])
 
     async function loadAccounts() {
-        let accounts = await provider.request({method: "eth_requestAccounts"});
-        // let publicKey = await provider.request({
-        //     method: "eth_getEncryptionPublicKey",
-        //     params: [accounts[0]]
-        // });
+        const provider = new ethers.providers.Web3Provider(windowType.ethereum, "any");
+        await provider.send("eth_requestAccounts", []);
+        const signer = provider.getSigner();
+        const address = await signer.getAddress();
 
-        setAccountAddress(accounts[0]);
+        setAccountAddress(address);
 
-        web3 = new Web3(provider);
+        // let sdk = new ThirdwebSDK(signer);
+        initThirdWeb(signer);
+
+        const web3Provider = windowType.ethereum;
+        web3 = new Web3(web3Provider);
         setWeb3Context(web3);
 
-        let bal = await web3.eth.getBalance(accounts[0]);
+        let bal = await web3.eth.getBalance(address);
         let ethBal: any = await web3.utils.fromWei(bal, "ether");
         setAccountBalance(ethBal);
+
         setWalletState({
-            address: accounts[0],
+            address: address,
             // publicKey: publicKey,
             balance: ethBal
         });
-        initContract(accounts[0])
+
+        initContract(address)
     }
 
     async function initContract(wallet_address: string) {
