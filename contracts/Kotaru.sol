@@ -1,4 +1,5 @@
 pragma solidity ^0.8.0;
+
 import "hardhat/console.sol";
 
 contract Kotaru {
@@ -82,7 +83,11 @@ contract Kotaru {
         _objekt.downloads = _objekt.downloads + 1;
         objekts[_id] = _objekt;
 
-        downloads[totalDownloads] = Download(totalDownloads, _objekt.id, msg.sender);
+        downloads[totalDownloads] = Download(
+            totalDownloads,
+            _objekt.id,
+            msg.sender
+        );
 
         emit ObjektBought(totalDownloads, _objekt.id, msg.sender);
     }

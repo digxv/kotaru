@@ -166,18 +166,22 @@ export default function Sell() {
                 hash: cid.string
             });
 
-            publishObjekt(`ipfs://${cid.string}`, filename, meta.value).then(res => {
-                setReady({
-                    success: true,
-                    id: res.events.ObjektPublished.returnValues.id
-                }); 
+            // publishObjekt(`ipfs://${cid.string}`, filename, meta.value).then(res => {
+            //     setReady({
+            //         success: true,
+            //         id: res.events.ObjektPublished.returnValues.id
+            //     }); 
 
-                setUploading({
-                    isLoading: false,
-                    text: ""
-                });
-            }).catch(err => {
-                console.error(err)
+            //     setUploading({
+            //         isLoading: false,
+            //         text: ""
+            //     });
+            // }).catch(err => {
+            //     console.error(err)
+            // })
+
+            let addReqResponse = await axios.post("/api/add", {
+                
             })
         } catch (error) {
             console.error(error);
