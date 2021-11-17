@@ -168,7 +168,7 @@ export default function Sell() {
             let MetaString = JSON.stringify(meta);
             const { cid } = await ipfs.add(MetaString);
 
-            let pfMetadata = await axios.post("/api/pinFile", {
+            await axios.post("/api/pinFile", {
                 hash: cid.string
             });
 
@@ -186,11 +186,29 @@ export default function Sell() {
             //     console.error(err)
             // })
 
-            // let addReqResponse = await axios.post("/api/add", {
-                
-            // })
+            // let NFT = thirdWeb.getNFTModule(`0xc24a0Cf47FFd3898cCD6de07412697AB09469635`);
 
-            
+            // let token = await NFT.mintTo(walletState.address, {
+            //     name: filename,
+            //     description: description,
+            //     product_uri: cid
+            // });
+
+            let addReqResponse = await axios.post("/api/add", {
+                name: filename,
+                ipfs_uri: cid.string,
+                decryption_key: decryptionKey
+            });
+
+            setReady({
+                success: true,
+                id: addReqResponse.data.slug
+            });
+
+            setUploading({
+                isLoading: false,
+                text: ""
+            });
 
         } catch (error) {
             console.error(error);
@@ -201,30 +219,9 @@ export default function Sell() {
         }
     }
 
-    const randomClick = async () => {
-        // let deploy = thirdWeb.getAppModule("0xf2D78D0485Cb74f6D9127F8499d0220865911735").deployNftModule({
-        //     name: "Random Name",
-        //     description: "Random Description",
-        //     symbol: "DIG",
-        //     feeRecipient: walletState.address,
-        //     sellerFeeBasisPoints: 100
-        // });
-
-        // console.log((await deploy).getMetadata);
-
-        let NFT = thirdWeb.getNFTModule(`0xf2D78D0485Cb74f6D9127F8499d0220865911735`);
-
-        let token = await NFT.mintTo(walletState.address, {
-            name: "smth",
-            description: "smth"
-        })
-
-        console.log(token);
-    }
- 
-    const publishObjekt = async (ipfs_hash: string, name: string, price: number) => {
-        return contract.methods.publishObjekt(name, ipfs_hash, price).send({from: walletState.address});
-    }
+    // const publishObjekt = async (ipfs_hash: string, name: string, price: number) => {
+    //     return contract.methods.publishObjekt(name, ipfs_hash, price).send({from: walletState.address});
+    // }
 
     return (
         <AppLayout pageTitle="Upload — Kotaru.xyz">
@@ -232,13 +229,16 @@ export default function Sell() {
                 paddingRight={[2, 5, 8]}
                 paddingLeft={[2, 5, 8]}
             >
+                <Box bgColor="green.300" maxWidth="800px" borderRadius="md" p="4" mb="5">
+                    Kotaru.xyz is experimental & a new smart contract will be deployed soon. Reach out on Twitter @kotaruxyz to get started as a creator.
+                </Box>
                 {
                     ready.success
                     ?
-                    <Box maxWidth="800px">
+                    <Box marginLeft="auto" marginRight="auto" maxWidth="800px">
                         <Text color="white" fontSize="xl">Your product is ready to be shared with the world! Just copy the link below and send over to your audience.</Text>
                         <br />
-                        <Link href={`/f/${ready.id}`} target="_blank" ><Text color="white" letterSpacing="wider" fontWeight="bold" borderRadius="sm" padding="2" bg="blue.400" fontSize="xl">https://kotaru.xyz/f/{ready.id}</Text></Link>
+                        <Link href={`/o/${ready.id}`} target="_blank" ><Text color="white" letterSpacing="wider" fontWeight="bold" borderRadius="sm" padding="2" bg="blue.400" fontSize="xl">https://kotaru.xyz/o/{ready.id}</Text></Link>
                     </Box>
                     :
                     <Box borderRadius="xl">
@@ -310,7 +310,7 @@ export default function Sell() {
                         
                         <Box border="0" mt="5" borderRadius="xl" bg="#E8E8E8">
 
-                            <Grid width="100%" templateColumns="repeat(2, 1fr)">
+                            {/* <Grid width="100%" templateColumns="repeat(2, 1fr)">
                                 <InputGroup
                                     borderTopRadius="xl"
                                 >
@@ -364,7 +364,34 @@ export default function Sell() {
                                         borderBottomRightRadius="0"
                                     />
                                 </InputGroup>
-                            </Grid>
+                            </Grid> */}
+
+                            <InputGroup
+                                borderTopRadius="xl"
+                            >
+                                <Input
+                                    bg="#E8E8E8"
+                                    type="number"
+                                    placeholder="Fixed Price"
+                                    variant="filled"
+                                    _hover={{ bg: "#E8E8E8" }}
+                                    _focus={{ bg: "#E8E8E8" }}
+                                    _placeholder={{ color: "#707070" }}
+                                    onChange={(e) => setPrice(e.target.value)}
+                                    paddingBottom="25px"
+                                    paddingTop="25px"
+                                    border="0"
+                                />
+                                <InputRightAddon
+                                    background="gray.900"
+                                    color="#ffffff"
+                                    children="ETH"
+                                    paddingBottom="25px"
+                                    paddingTop="25px"
+                                    border="0"
+                                    borderRightRadius="0"
+                                />
+                            </InputGroup>
 
                             <Button
                                 borderTopRadius="0"
@@ -387,9 +414,9 @@ export default function Sell() {
                                 {uploading.isLoading ? uploading.text : "Mint"}
                             </Button>
 
-                            <Button onClick={() => randomClick()}>
+                            {/* <Button onClick={() => randomClick()}>
                                 Click
-                            </Button>
+                            </Button> */}
                         </Box>
                     </Box>
                 }
