@@ -40,20 +40,10 @@ export default function Objekt() {
 
     const LoadObjekt = async () => {
         if (id !== undefined && contract !== undefined) {
-            const objektBlock = await contract.methods.objekts(id).call();
-            setDownloads(objektBlock.downloads);
-            const Http = new XMLHttpRequest();
-            const url=`https://ipfs.io/ipfs/${objektBlock.ipfs_uri.substr(7)}`;
-            Http.open("GET", url);
-            Http.send();
-            Http.onloadend = async (e) => {
-                let JSON_meta = JSON.parse(Http.responseText);
-                console.log(JSON_meta);
-                setMetaData(JSON_meta);
-                setLoaded(true)
-                let value_in_eth = await web3Context.utils.fromWei(JSON_meta.value, "ether");
-                setValue(value_in_eth);
-            }
+            const objekt = await axios.get(`/api/objekt/${id}`);
+            const objektData = objekt.data;
+            setMetaData(objektData);
+            setLoaded(true);
         }
     }
 

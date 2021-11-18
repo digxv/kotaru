@@ -29,7 +29,7 @@ export default async (req, res) => {
         const slug = slugify(`${name} ${makeid(10)}`);
 
         try {
-            const docRef = await addDoc(collection(db, "v1_objekt"), {
+            const docRef = await addDoc(collection(db, "v1_objekts"), {
                 ipfs_uri: ipfs_uri,
                 decryption_key: decryption_key,
                 objekt_name: name,

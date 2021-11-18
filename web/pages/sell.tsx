@@ -294,7 +294,7 @@ export default function Sell() {
                     <Box marginLeft="auto" marginRight="auto" maxWidth="800px">
                         <Text color="white" fontSize="xl">Your product is ready to be shared with the world! Just copy the link below and send over to your audience.</Text>
                         <br />
-                        <Link href={`/o/${ready.id}`} target="_blank" ><Text color="white" letterSpacing="wider" fontWeight="bold" borderRadius="sm" padding="2" bg="blue.400" fontSize="xl">https://kotaru.xyz/o/{ready.id}</Text></Link>
+                        <Link href={`/objekt/${ready.id}`} target="_blank" ><Text color="white" letterSpacing="wider" fontWeight="bold" borderRadius="sm" padding="2" bg="blue.400" fontSize="xl">https://kotaru.xyz/objekt/{ready.id}</Text></Link>
                     </Box>
                     :
                     <Box borderRadius="xl">
