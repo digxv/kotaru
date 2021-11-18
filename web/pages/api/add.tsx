@@ -20,7 +20,7 @@ export default async (req, res) => {
 
         let db = firebase.firestore();
 
-        const { name, ipfs_uri, decryption_key } = req.body;
+        const { name, ipfs_uri, decryption_key, contract_address } = req.body;
         const slug = slugify(`${name} ${makeid(10)}`);
 
         console.log(name, ipfs_uri, decryption_key, slug);
@@ -28,7 +28,8 @@ export default async (req, res) => {
         await db.collection("v1_objekt").doc(slug).set({
             ipfs_uri: ipfs_uri,
             decryption_key: decryption_key,
-            objekt_name: name
+            objekt_name: name,
+            contract_address: contract_address
         });
 
         return res.status(200).json({

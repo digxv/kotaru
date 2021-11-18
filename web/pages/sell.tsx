@@ -162,7 +162,7 @@ export default function Sell() {
         try {
             setUploading({
                 isLoading: true,
-                text: "Confirming Transaction..."
+                text: "Uploading..."
             })
 
             let MetaString = JSON.stringify(meta);
@@ -172,32 +172,31 @@ export default function Sell() {
                 hash: cid.string
             });
 
-            // publishObjekt(`ipfs://${cid.string}`, filename, meta.value).then(res => {
-            //     setReady({
-            //         success: true,
-            //         id: res.events.ObjektPublished.returnValues.id
-            //     }); 
+            setUploading({
+                isLoading: true,
+                text: "Deployment..."
+            })
 
-            //     setUploading({
-            //         isLoading: false,
-            //         text: ""
-            //     });
-            // }).catch(err => {
-            //     console.error(err)
-            // })
+            await axios.post(`/api/grantRole`, {
+                address: walletState.address,
+                role: "admin"
+            });
 
-            // let NFT = thirdWeb.getNFTModule(`0xc24a0Cf47FFd3898cCD6de07412697AB09469635`);
+            let appMod = await thirdWeb.getAppModule("0x2998e811b64c365646818f1e7F8D8333f79f2C1b");
 
-            // let token = await NFT.mintTo(walletState.address, {
-            //     name: filename,
-            //     description: description,
-            //     product_uri: cid
-            // });
+            let deploy = await appMod.deployNftModule({
+                name: filename,
+                description: description,
+                symbol: "XYZ",
+                feeRecipient: walletState.address,
+                sellerFeeBasisPoints: royalty * 100
+            });
 
             let addReqResponse = await axios.post("/api/add", {
                 name: filename,
                 ipfs_uri: cid.string,
-                decryption_key: decryptionKey
+                decryption_key: decryptionKey,
+                contract_address: deploy.address
             });
 
             setReady({
@@ -218,10 +217,6 @@ export default function Sell() {
             });
         }
     }
-
-    // const publishObjekt = async (ipfs_hash: string, name: string, price: number) => {
-    //     return contract.methods.publishObjekt(name, ipfs_hash, price).send({from: walletState.address});
-    // }
 
     return (
         <AppLayout pageTitle="Upload — Kotaru.xyz">
@@ -310,7 +305,7 @@ export default function Sell() {
                         
                         <Box border="0" mt="5" borderRadius="xl" bg="#E8E8E8">
 
-                            {/* <Grid width="100%" templateColumns="repeat(2, 1fr)">
+                            <Grid width="100%" templateColumns="repeat(2, 1fr)">
                                 <InputGroup
                                     borderTopRadius="xl"
                                 >
@@ -364,34 +359,7 @@ export default function Sell() {
                                         borderBottomRightRadius="0"
                                     />
                                 </InputGroup>
-                            </Grid> */}
-
-                            <InputGroup
-                                borderTopRadius="xl"
-                            >
-                                <Input
-                                    bg="#E8E8E8"
-                                    type="number"
-                                    placeholder="Fixed Price"
-                                    variant="filled"
-                                    _hover={{ bg: "#E8E8E8" }}
-                                    _focus={{ bg: "#E8E8E8" }}
-                                    _placeholder={{ color: "#707070" }}
-                                    onChange={(e) => setPrice(e.target.value)}
-                                    paddingBottom="25px"
-                                    paddingTop="25px"
-                                    border="0"
-                                />
-                                <InputRightAddon
-                                    background="gray.900"
-                                    color="#ffffff"
-                                    children="ETH"
-                                    paddingBottom="25px"
-                                    paddingTop="25px"
-                                    border="0"
-                                    borderRightRadius="0"
-                                />
-                            </InputGroup>
+                            </Grid>
 
                             <Button
                                 borderTopRadius="0"
@@ -413,10 +381,6 @@ export default function Sell() {
                             >
                                 {uploading.isLoading ? uploading.text : "Mint"}
                             </Button>
-
-                            {/* <Button onClick={() => randomClick()}>
-                                Click
-                            </Button> */}
                         </Box>
                     </Box>
                 }
