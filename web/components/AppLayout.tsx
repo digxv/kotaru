@@ -7,9 +7,9 @@ import { WalletContext } from "../utils/walletContext";
 import Footer from "./Footer";
 import { ContractContext, Web3Context } from "../utils/web3Context";
 import ContractJSON from "../../artifacts/contracts/Kotaru.sol/Kotaru.json";
-import { ethers } from "@usedapp/core/node_modules/ethers";
 import { ThirdwebSDK } from "@3rdweb/sdk";
 import { initThirdWeb } from "../utils/thirdWeb";
+import { ethers } from "ethers";
 
 export default function AppLayout ({ children, pageTitle }) {
     let windowType: any;
