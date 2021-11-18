@@ -117,7 +117,7 @@ export default function Sell() {
                 file_extension: file.name.split('.').pop()
             }
 
-            finalMetaUpload(JSON_meta);
+            finalMetaUpload(JSON_meta, passphrase);
             
         } catch (error) {
             console.error(error);
@@ -131,8 +131,6 @@ export default function Sell() {
     const processLink = async () => {
         try {
             let passphrase = Math.random().toString(36);
-
-            setDecryptionKey(passphrase);
 
             let encrypted = CryptoJS.AES.encrypt(link, passphrase);
 
@@ -151,7 +149,7 @@ export default function Sell() {
                 description: description
             }
 
-            finalMetaUpload(JSON_meta);
+            finalMetaUpload(JSON_meta, passphrase);
         } catch (error) {
             console.error(error);
             setUploading({
@@ -161,7 +159,7 @@ export default function Sell() {
         }
     }
 
-    const finalMetaUpload = async (meta: any) => {
+    const finalMetaUpload = async (meta: any, decryption_key: string) => {
         try {
             setUploading({
                 isLoading: true,
@@ -217,7 +215,7 @@ export default function Sell() {
             let addReqResponse = await axios.post("/api/add", {
                 name: filename,
                 ipfs_uri: cid.string,
-                decryption_key: decryptionKey,
+                decryption_key: decryption_key,
                 contract_address: deploy.address
             });
 
