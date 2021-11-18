@@ -27,9 +27,9 @@ export default async (req: any, response) => {
         let _contractJSON: any = ContractJSON;
         let contract = new web3.eth.Contract(_contractJSON.abi, "0xe1EBD03808a6C080350501140Ac8Cf9740F6Ba47");
         let downloadBlock = await contract.methods.downloads(req.body.download_id).call();
-        console.log(downloadBlock.buyer);
+
         let randomString = Math.random().toString(36);
-        console.log(randomString);
+
         let fb_save = await db.collection("orders").add({
             download_id: req.body.download_id,
             buyer: downloadBlock.buyer,

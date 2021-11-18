@@ -10,7 +10,7 @@ export default async (req, res) => {
             )
         );
 
-        const appMod = await sdk.getAppModule("0x2998e811b64c365646818f1e7F8D8333f79f2C1b");
+        const appMod = await sdk.getAppModule(req.body.contract_address);
 
         const roleMembers = await appMod.getRoleMembers(req.body.role);
 
@@ -29,3 +29,7 @@ export default async (req, res) => {
         res.status(400).json({ msg: "wrong method bro" });
     }
 }  
+
+
+// 73.9055
+// 73.8942

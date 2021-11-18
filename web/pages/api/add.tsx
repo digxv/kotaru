@@ -25,12 +25,15 @@ export default async (req, res) => {
 
         console.log(name, ipfs_uri, decryption_key, slug);
 
-        await db.collection("v1_objekt").doc(slug).set({
+        let fb_doc = await db.collection("v1_objekt").add({
             ipfs_uri: ipfs_uri,
             decryption_key: decryption_key,
             objekt_name: name,
-            contract_address: contract_address
+            contract_address: contract_address,
+            slug: slug
         });
+
+        console.log(fb_doc.id);
 
         return res.status(200).json({
             slug: slug

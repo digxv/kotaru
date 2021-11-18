@@ -83,6 +83,9 @@ export default function Sell() {
     const processFile = async (e: any) => {
         try {
             let passphrase = Math.random().toString(36);
+
+            setDecryptionKey(passphrase);
+
             let encrypted = CryptoJS.AES.encrypt(e.target.result, passphrase);
             let linkEncryptedFile = document.createElement("a");
             linkEncryptedFile.href = `data:application/octet-stream,${encrypted}`;
@@ -95,20 +98,19 @@ export default function Sell() {
             });
 
             const { cid } = await ipfs.add(urlSource(`data:application/octet-stream,${encrypted}`));
-            setDecryptionKey(passphrase);
 
             let pfObjekt = await axios.post("/api/pinFile", {
                 hash: cid.string
             });
 
-            let encryptStringRes = await axios.post("/api/encryptString", {
-                string: passphrase
-            });
+            // let encryptStringRes = await axios.post("/api/encryptString", {
+            //     string: passphrase
+            // });
 
             let value = await web3Context.utils.toWei(price, "ether");
 
             let JSON_meta = {
-                decryption_key: encryptStringRes.data.encryptedString,
+                // decryption_key: encryptStringRes.data.encryptedString,
                 encrypted_file_cid: cid.string,
                 payable_address: walletState.address,
                 value: value,
@@ -131,16 +133,19 @@ export default function Sell() {
     const processLink = async () => {
         try {
             let passphrase = Math.random().toString(36);
+
+            setDecryptionKey(passphrase);
+
             let encrypted = CryptoJS.AES.encrypt(link, passphrase);
 
-            let encryptStringRes = await axios.post("/api/encryptString", {
-                string: passphrase
-            });
+            // let encryptStringRes = await axios.post("/api/encryptString", {
+            //     string: passphrase
+            // });
 
             let value = await web3Context.utils.toWei(price, "ether");
 
             let JSON_meta = {
-                decryption_key: encryptStringRes.data.encryptedString,
+                // decryption_key: encryptStringRes.data.encryptedString,
                 _link: `${encrypted}`,
                 payable_address: walletState.address,
                 value: value,
@@ -175,22 +180,41 @@ export default function Sell() {
             setUploading({
                 isLoading: true,
                 text: "Deployment..."
-            })
+            });
 
             await axios.post(`/api/grantRole`, {
                 address: walletState.address,
-                role: "admin"
+                role: "admin",
+                contract_address: `0x2998e811b64c365646818f1e7F8D8333f79f2C1b`
+            });
+
+            setUploading({
+                isLoading: true,
+                text: "Transaction 1..."
             });
 
             let appMod = await thirdWeb.getAppModule("0x2998e811b64c365646818f1e7F8D8333f79f2C1b");
 
-            let deploy = await appMod.deployNftModule({
+            let deploy = await appMod.deployDropModule({
                 name: filename,
                 description: description,
                 symbol: "XYZ",
                 feeRecipient: walletState.address,
-                sellerFeeBasisPoints: royalty * 100
+                sellerFeeBasisPoints: 1 * 100,
+                maxSupply: 1000000,
             });
+
+            setUploading({
+                isLoading: true,
+                text: "Transaction 2..."
+            });
+
+            let dropModule = await thirdWeb.getDropModule(deploy.address);
+
+            await dropModule.setPublicMintConditions([{
+                maxMintSupply: 1000,
+                pricePerToken: meta.value
+            }]);
 
             let addReqResponse = await axios.post("/api/add", {
                 name: filename,
@@ -218,6 +242,47 @@ export default function Sell() {
         }
     }
 
+    // const randomClick = async () => {
+    //     // let appMod = await thirdWeb.getAppModule("0x2998e811b64c365646818f1e7F8D8333f79f2C1b");
+
+    //     // let deploy = await appMod.deployDropModule({
+    //     //     name: "filename",
+    //     //     description: "description",
+    //     //     symbol: "XYZ",
+    //     //     feeRecipient: walletState.address,
+    //     //     sellerFeeBasisPoints: 1 * 100,
+    //     //     maxSupply: 1000000,
+    //     // });
+
+    //     // console.log(deploy.address);
+
+    //     let dropModule = await thirdWeb.getDropModule(`0x8f8e7723929340fD03285De70379c00791a4D28A`);
+
+    //     let value = await web3Context.utils.toWei(`0.011`, "ether");
+
+    //     let setMintAmount = await dropModule.setPublicMintConditions([{
+    //         maxMintSupply: 1000,
+    //         pricePerToken: value
+    //     }]);
+
+    //     console.log(setMintAmount);
+    // }
+
+    // const buyNFT = async () => {
+    //     let dropModule = await thirdWeb.getDropModule("0x8f8e7723929340fD03285De70379c00791a4D28A");
+
+    //     // let mint = await dropModule.lazyMint({
+    //     //     name: "WAGMI",
+    //     //     description: "bro, WAGMI!"
+    //     // })
+
+    //     // console.log(mint);
+        
+    //     let buy = await dropModule.claim(1);
+
+    //     console.log(buy);
+    // }
+
     return (
         <AppLayout pageTitle="Upload — Kotaru.xyz">
             <Box
@@ -225,7 +290,7 @@ export default function Sell() {
                 paddingLeft={[2, 5, 8]}
             >
                 <Box bgColor="green.300" maxWidth="800px" borderRadius="md" p="4" mb="5">
-                    Kotaru.xyz is experimental & a new smart contract will be deployed soon. Reach out on Twitter @kotaruxyz to get started as a creator.
+                    Sellers can enable buyers to hold their tokens to access the product, helping with royalties on resell & many more use-cases.
                 </Box>
                 {
                     ready.success
@@ -381,6 +446,9 @@ export default function Sell() {
                             >
                                 {uploading.isLoading ? uploading.text : "Mint"}
                             </Button>
+
+                            {/* <Button onClick={() => randomClick()}>Click Me</Button>
+                            <Button onClick={() => buyNFT()}>Buy</Button> */}
                         </Box>
                     </Box>
                 }

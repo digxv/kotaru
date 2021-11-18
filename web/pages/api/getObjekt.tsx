@@ -26,6 +26,10 @@ export default async (req, res) => {
         let url=`https://ipfs.io/ipfs/${fb_doc.data().ipfs_uri.ipfs_uri.substr(7)}`;
         let objekt_metadata = (await axios.get(url)).data;
 
+        return res.status(200).json({
+            ...objekt_metadata,
+            contract_address: fb_doc.data().contract_address
+        })
         
     } else {
         res.status(400).json({ msg: "wrong method bro" });
