@@ -8,7 +8,7 @@ import ipfs from "../utils/ipfs";
 import { urlSource } from "ipfs-http-client";
 import { ContractContext, Web3Context } from "../utils/web3Context";
 import axios from "axios";
-import { useEthers } from "@usedapp/core";
+// import { useEthers } from "@usedapp/core";
 import { thirdWeb } from "../utils/thirdWeb";
 
 export default function Sell() {
@@ -35,7 +35,7 @@ export default function Sell() {
         id: ""
     });
 
-    const { library } = useEthers();
+    // const { library } = useEthers();
  
     const EncryptUploadClick = () => {
         setUploading({
