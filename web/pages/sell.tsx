@@ -8,9 +8,7 @@ import ipfs from "../utils/ipfs";
 import { urlSource } from "ipfs-http-client";
 import { ContractContext, Web3Context } from "../utils/web3Context";
 import axios from "axios";
-import { ThirdwebSDK } from "@3rdweb/sdk";
 import { useEthers } from "@usedapp/core";
-import { ethers } from "ethers";
 import { thirdWeb } from "../utils/thirdWeb";
 
 export default function Sell() {
@@ -200,7 +198,7 @@ export default function Sell() {
                 description: description,
                 symbol: "XYZ",
                 feeRecipient: walletState.address,
-                sellerFeeBasisPoints: 1 * 100,
+                sellerFeeBasisPoints: royalty * 100,
                 maxSupply: 1000000,
             });
 
@@ -212,7 +210,7 @@ export default function Sell() {
             let dropModule = await thirdWeb.getDropModule(deploy.address);
 
             await dropModule.setPublicMintConditions([{
-                maxMintSupply: 1000,
+                maxMintSupply: 1000000,
                 pricePerToken: meta.value
             }]);
 
@@ -284,7 +282,7 @@ export default function Sell() {
     // }
 
     return (
-        <AppLayout pageTitle="Upload — Kotaru.xyz">
+        <AppLayout pageTitle="Sell w/ NFTs — Kotaru.xyz">
             <Box
                 paddingRight={[2, 5, 8]}
                 paddingLeft={[2, 5, 8]}

@@ -12,7 +12,7 @@ import { FaDownload } from "react-icons/fa";
 // import util from "ethereumjs-util";
 import secp256k1, { publicKeyCreate } from "secp256k1";
 
-export default function Objekt() {
+export default function BuyObjekt() {
 
     const router = useRouter();
     const { id } = router.query;
