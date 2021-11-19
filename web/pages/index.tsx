@@ -58,7 +58,7 @@ export default function Index() {
       </Box>
 
       <Box mt="80px" padding="10px">
-        <Box textAlign="center" mb="80px">
+        {/* <Box textAlign="center" mb="80px">
           <Grid templateColumns="repeat(2, 1fr)" gap={6}>
             <Link href="/sell">
               <Box maxWidth="80%" marginLeft="auto" marginRight="auto" cursor="pointer" color="#FFF" p="12" borderRadius="md" bgGradient="linear(to-l, #7928CA, #FF0080)">
@@ -75,7 +75,7 @@ export default function Index() {
               </Box>
             </Link>
           </Grid>
-        </Box>
+        </Box> */}
         <Features />
       </Box>
 

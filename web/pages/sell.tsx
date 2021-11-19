@@ -244,10 +244,13 @@ export default function Sell() {
                 paddingRight={[2, 5, 8]}
                 paddingLeft={[2, 5, 8]}
             >
-                <Box bgColor="green.300" maxWidth="800px" borderRadius="md" p="4" mb="5">
+                {/* <Box bgColor="green.300" maxWidth="800px" borderRadius="md" p="4" mb="5">
                     Sellers can enable buyers to hold their tokens to access the product, helping with royalties on resell & many more use-cases.
+                </Box> */}
+                <Box bgColor="green.300" maxWidth="800px" borderRadius="md" p="4" mb="5">
+                    Will be available soon, follow @0xDig on Twitter for updates.
                 </Box>
-                {
+                {/* {
                     ready.success
                     ?
                     <Box marginLeft="auto" marginRight="auto" maxWidth="800px">
@@ -284,8 +287,6 @@ export default function Sell() {
                                 _placeholder={{ color: "#707070" }}
                                 onChange={(e) => setDescription(e.target.value)}
                             />
-
-                            {/* <Box border="2px #bbb solid" /> */}
                             
                         </Box>
 
@@ -403,7 +404,7 @@ export default function Sell() {
                             </Button>
                         </Box>
                     </Box>
-                }
+                } */}
             </Box>
         </AppLayout>
     )
