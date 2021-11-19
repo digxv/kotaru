@@ -34,6 +34,7 @@ export default async (req, res) => {
 
         return res.status(200).json({
             ...objekt_metadata,
+            ipfs_uri: objekt.ipfs_uri,
             contract_address: objekt.contract_address
         })
         

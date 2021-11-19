@@ -11,6 +11,7 @@ import Web3 from "web3";
 import { FaDownload } from "react-icons/fa";
 // import util from "ethereumjs-util";
 import secp256k1, { publicKeyCreate } from "secp256k1";
+import { thirdWeb } from "../../utils/thirdWeb";
 
 export default function Objekt() {
 
@@ -27,12 +28,20 @@ export default function Objekt() {
         value: 0,
         payable_address: "",
         encrypted_file_cid: "",
-        decryption_key: ""
-    })
+        decryption_key: "",
+        ipfs_uri: ""
+    });
     const [loaded, setLoaded] = useState(false);
     const [value, setValue] = useState(0);
     const [downloads, setDownloads] = useState(0);
-    const [buttonLoading, setButtonLoading] = useState(false);
+    const [buttonLoading, setButtonLoading] = useState({
+        loading: false,
+        text: ""
+    });
+
+    const [objektContractAddress, setObjektContractAddress] = useState("");
+    const [objektContract, setObjektContract] = useState(null);
+    const [alreadyMinted, setAlreadyMinted] = useState(false);
 
     useEffect(() => {
         LoadObjekt();
@@ -42,74 +51,120 @@ export default function Objekt() {
         if (id !== undefined && contract !== undefined) {
             const objekt = await axios.get(`/api/objekt/${id}`);
             const objektData = objekt.data;
+
+            const _objektContract = await thirdWeb.getDropModule(objektData.contract_address);
+
+            const objektContractConditions = await _objektContract.contract.mintConditions(0);
+            const objektContractConditionsPPT = await objektContractConditions["pricePerToken"];
+            const NFTsMinted = await _objektContract.getAll();
+            console.log(walletState.address);
+            const NFTsMintedByUser = await _objektContract.balanceOf(walletState.address);
+            NFTsMintedByUser.toString() === "0" ? setAlreadyMinted(false) : setAlreadyMinted(true); 
+
+            setObjektContract(_objektContract);
+            setValue(await web3Context.utils.fromWei(`${objektContractConditionsPPT.toNumber()}`, "ether"));
+            setObjektContractAddress(_objektContract.address);
             setMetaData(objektData);
+            setDownloads(NFTsMinted.length);
             setLoaded(true);
         }
     }
 
     const PayDownloadClick = async () => {
-        setButtonLoading(true);
+        try {
+            setButtonLoading({
+                loading: true, 
+                text: "Preparing NFT..."
+            });
 
-        let downloads = [];
-        let totalDownloads = await contract.methods.totalDownloads().call();
+            await axios.post(`/api/grantRole`, {
+                contract_address: objektContractAddress,
+                role: "minter",
+                address: walletState.address,
+                objekt: true
+            });
 
-        for(let i = 1; i < totalDownloads; i++) {
-            let download = await contract.methods.downloads(i).call();
-            downloads.push(download);
-        }
+            setButtonLoading({
+                loading: true,
+                text: "Lazy Mint..."
+            })
 
-        let filterDownloads = downloads.filter(download => download.objekt_id === id && download.buyer.toLowerCase() === walletState.address.toLowerCase());
+            await objektContract.lazyMint({
+                name: metaData.filename,
+                description: metaData.description,
+                objekt_uri: metaData.ipfs_uri
+            });
 
-        if(filterDownloads.length > 0) {
-            VerifyUser(filterDownloads[0].id);
-        } else {
-            buyObjektCall().then(res => {
-                VerifyUser(res.events.ObjektBought.returnValues.id);
+            setButtonLoading({
+                loading: true,
+                text: "Claim NFT..."
+            })
+
+            await objektContract.claim(1);
+
+            VerifyUser();
+        } catch {
+            setButtonLoading({
+                loading: false,
+                text: ""
             });
         }
     }
     
-    const VerifyUser = async (download_id: any) => {
+    const VerifyUser = async () => {
         let windowType: any = window;
         let provider: any = windowType.ethereum;
 
+        setButtonLoading({
+            loading: true,
+            text: "Verify Ownership..."
+        })
+
         try {
-            let randomStringRes = await axios.post("/api/generateRandomString", {
-                download_id: download_id
-            });
-
+            let randomStringRes = await axios.get(`/api/randomstring/${walletState.address}`);
             let signature = await web3Context.eth.personal.sign(randomStringRes.data.string, walletState.address, "");
-    
-            let decryptContentRes = await axios.post("/api/decryptContent", {
-                string: randomStringRes.data.string,
+
+            setButtonLoading({
+                loading: true,
+                text: "Downloading..."
+            })
+
+            let downloadReqRes = await axios.post(`/api/download`, {
                 signature: signature,
+                objekt_contract: objektContractAddress,
+                string: randomStringRes.data.string
             });
 
-            if (metaData._link !== undefined) {
-                window.open(decryptContentRes.data.decryptedLink, '_blank');
-                setButtonLoading(false);
+            if(metaData._link !== undefined) {
+                window.open(downloadReqRes.data.decryptedLink);
+                setButtonLoading({
+                    loading: false,
+                    text: ""
+                });
             } else {
                 let link = document.createElement("a");
-                link.href = decryptContentRes.data.decryptedFile;
+                link.href = downloadReqRes.data.decryptedFile;
+
                 if(metaData.file_extension.length === 0) {
                     link.download = `${metaData.filename}.pdf`;
                 } else {
                     link.download = `${metaData.filename}.${metaData.file_extension}`;
                 }
-                setButtonLoading(false);
+
+                setButtonLoading({
+                    loading: false,
+                    text: ""
+                });
+
                 link.click();
             }
         } catch (error) {
             console.error(error);
-            setButtonLoading(false);
+            setButtonLoading({
+                loading: false,
+                text: ""
+            })
         }
-    }
-
-    const buyObjektCall = async () => {
-        return await contract.methods.buyObjekt(id).send({
-            from: walletState.address,
-            value: metaData.value
-        })
     }
 
     return (
@@ -126,7 +181,7 @@ export default function Objekt() {
                 ?
                 <>
                     <Box bgColor="green.300" color="black" maxWidth="800px" borderRadius="md" p="4" mb="5">
-                        Kotaru.xyz is experimental & a new smart contract will be deployed soon. File below is meant to demonstrate how the platform works.
+                        Buyers are required to mint and hold the product token to access it. Use the Download button to do so.
                     </Box>
                     <Text display="inline" fontSize="4xl" style={{fontWeight: "bold"}}>
                         {metaData.filename}
@@ -138,22 +193,49 @@ export default function Objekt() {
                         {metaData.description}
                     </Text>
                     <Text  paddingTop="5" fontSize="lg">
-                        By <span style={{backgroundColor: "yellow", color:"#000"}}>{metaData.payable_address}</span>
+                        <span style={{backgroundColor: "yellow", color:"#000"}}>{objektContractAddress}</span>
                     </Text>
-                    <Button
-                        paddingTop="25px"
-                        paddingBottom="25px"
-                        marginTop="5"
-                        width="100%"
-                        backgroundColor="gray.900"
-                        color="#ffffff"
-                        _hover={{ bg: "gray.900" }}
-                        _active={{ bg: "gray.900" }}
-                        _focus={{ bg: "gray.900" }}
-                        onClick={() => buttonLoading ? null : PayDownloadClick()}
-                    >
-                        {buttonLoading ? "Loading...": `Pay ${value} ETH & Download`}
-                    </Button>
+                    {
+                        alreadyMinted
+                        ?
+                        <Button
+                            cursor={buttonLoading.loading ? "wait" : "pointer"}
+                            paddingTop="25px"
+                            paddingBottom="25px"
+                            marginTop="5"
+                            width="100%"
+                            bgGradient="linear(to-l, #09c6f9, #045de9)"
+                            color="#ffffff"
+                            _hover={{bgGradient: "linear(to-l, #09c6f9, #045de9)"}}
+                            _active={{bgGradient: "linear(to-l, #09c6f9, #045de9)"}}
+                            _focus={{bgGradient: "linear(to-l, #09c6f9, #045de9)"}}
+                            onClick={() => buttonLoading.loading ? null : VerifyUser()}
+                            textTransform="uppercase"
+                            letterSpacing="1.2px"
+                            fontSize="lg"
+                        >
+                            {buttonLoading.loading ? buttonLoading.text : `Download`}
+                        </Button>
+                        :
+                        <Button
+                            cursor={buttonLoading.loading ? "wait" : "pointer"}
+                            paddingTop="25px"
+                            paddingBottom="25px"
+                            marginTop="5"
+                            width="100%"
+                            bgGradient="linear(to-l, #09c6f9, #045de9)"
+                            color="#ffffff"
+                            _hover={{bgGradient: "linear(to-l, #09c6f9, #045de9)"}}
+                            _active={{bgGradient: "linear(to-l, #09c6f9, #045de9)"}}
+                            _focus={{bgGradient: "linear(to-l, #09c6f9, #045de9)"}}
+                            onClick={() => buttonLoading.loading ? null : PayDownloadClick()}
+                            textTransform="uppercase"
+                            letterSpacing="1.2px"
+                            fontSize="lg"
+                        >
+                            {buttonLoading.loading ? buttonLoading.text : `Pay ${value} ETH & Download`}
+                        </Button>
+                    }
                 </>
                 :
                 <Spinner size="lg" />

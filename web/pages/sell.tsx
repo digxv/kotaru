@@ -238,47 +238,6 @@ export default function Sell() {
         }
     }
 
-    // const randomClick = async () => {
-    //     // let appMod = await thirdWeb.getAppModule("0x2998e811b64c365646818f1e7F8D8333f79f2C1b");
-
-    //     // let deploy = await appMod.deployDropModule({
-    //     //     name: "filename",
-    //     //     description: "description",
-    //     //     symbol: "XYZ",
-    //     //     feeRecipient: walletState.address,
-    //     //     sellerFeeBasisPoints: 1 * 100,
-    //     //     maxSupply: 1000000,
-    //     // });
-
-    //     // console.log(deploy.address);
-
-    //     let dropModule = await thirdWeb.getDropModule(`0x8f8e7723929340fD03285De70379c00791a4D28A`);
-
-    //     let value = await web3Context.utils.toWei(`0.011`, "ether");
-
-    //     let setMintAmount = await dropModule.setPublicMintConditions([{
-    //         maxMintSupply: 1000,
-    //         pricePerToken: value
-    //     }]);
-
-    //     console.log(setMintAmount);
-    // }
-
-    // const buyNFT = async () => {
-    //     let dropModule = await thirdWeb.getDropModule("0x8f8e7723929340fD03285De70379c00791a4D28A");
-
-    //     // let mint = await dropModule.lazyMint({
-    //     //     name: "WAGMI",
-    //     //     description: "bro, WAGMI!"
-    //     // })
-
-    //     // console.log(mint);
-        
-    //     let buy = await dropModule.claim(1);
-
-    //     console.log(buy);
-    // }
-
     return (
         <AppLayout pageTitle="Sell w/ NFTs — Kotaru.xyz">
             <Box
@@ -442,9 +401,6 @@ export default function Sell() {
                             >
                                 {uploading.isLoading ? uploading.text : "Mint"}
                             </Button>
-
-                            {/* <Button onClick={() => randomClick()}>Click Me</Button>
-                            <Button onClick={() => buyNFT()}>Buy</Button> */}
                         </Box>
                     </Box>
                 }

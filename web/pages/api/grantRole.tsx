@@ -10,8 +10,14 @@ export default async (req, res) => {
             )
         );
 
-        const appMod = await sdk.getAppModule(req.body.contract_address);
+        let appMod: any;
 
+        if(req.body.objekt) {
+            appMod = await sdk.getDropModule(req.body.contract_address);
+        } else {
+            appMod = await sdk.getAppModule(req.body.contract_address);
+        }
+            
         const roleMembers = await appMod.getRoleMembers(req.body.role);
 
         if(roleMembers.includes(req.body.address)) {
@@ -28,8 +34,4 @@ export default async (req, res) => {
     } else {
         res.status(400).json({ msg: "wrong method bro" });
     }
-}  
-
-
-// 73.9055
-// 73.8942
+} 

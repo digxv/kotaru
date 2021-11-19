@@ -94,13 +94,12 @@ export default function Header({accountAddress, accountBalance}) {
           >
             <Text fontSize="md" paddingRight="2" fontWeight="bold">{parseFloat(accountBalance).toFixed(4)}</Text> {accountAddress.substr(0, 4)}...{accountAddress.substr(accountAddress.length - 4)}
           </Button> : null}
-          <NextLink href="/upload"><Button
+          <NextLink href="/sell"><Button
             fontSize={'lg'}
             fontWeight={600}
             size="md"
             color={'white'}
             bgGradient="linear(to-l, #7928CA, #FF0080)"
-            href={"/upload"}
             _hover={{
               bgGradient: "linear(to-l, #7928CA, #FF0080)"
             }}

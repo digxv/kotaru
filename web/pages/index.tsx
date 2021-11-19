@@ -60,14 +60,14 @@ export default function Index() {
       <Box mt="80px" padding="10px">
         <Box textAlign="center" mb="80px">
           <Grid templateColumns="repeat(2, 1fr)" gap={6}>
-            <Link href="/upload">
+            <Link href="/sell">
               <Box maxWidth="80%" marginLeft="auto" marginRight="auto" cursor="pointer" color="#FFF" p="12" borderRadius="md" bgGradient="linear(to-l, #7928CA, #FF0080)">
                 <Text fontSize="xl">Keep 100% of your sales - <span style={{
                   fontWeight: 'bold'
                 }}>Sell now!</span></Text>
               </Box>
             </Link>
-            <Link href="/f/12">
+            <Link href="/objekt/Blockchain-Resources-CFEjBVJJ0e">
               <Box maxWidth="80%" marginLeft="auto" marginRight="auto" cursor="pointer" color="#FFF" p="12" borderRadius="md" bgGradient="linear(to-l, #09c6f9, #045de9)">
                 <Text  fontSize="xl">Check out how it works by <span style={{
                   fontWeight: "bold"

@@ -124,7 +124,7 @@ export default function BuyObjekt() {
 
     return (
         <AppLayout pageTitle="Kotaru.xyz">
-            <Box
+            {/* <Box
                 marginRight="auto"
                 marginLeft="auto"
                 maxWidth="800px"
@@ -168,7 +168,7 @@ export default function BuyObjekt() {
                 :
                 <Spinner size="lg" />
                 }
-            </Box>
+            </Box> */}
         </AppLayout>
     )
 }

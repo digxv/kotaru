@@ -193,7 +193,7 @@ export default function Upload() {
 
     return (
         <AppLayout pageTitle="Upload — Kotaru.xyz">
-            <Box
+            {/* <Box
                 paddingRight={[2, 5, 8]}
                 paddingLeft={[2, 5, 8]}
             >
@@ -237,8 +237,6 @@ export default function Upload() {
                                 _placeholder={{ color: "#707070" }}
                                 onChange={(e) => setDescription(e.target.value)}
                             />
-
-                            {/* <Box border="2px #bbb solid" /> */}
                             
                         </Box>
 
@@ -277,47 +275,6 @@ export default function Upload() {
                         </Box>
                         
                         <Box border="0" mt="5" borderRadius="xl" bg="#E8E8E8">
-
-                            {/* <Grid width="100%" templateColumns="repeat(2, 1fr)">
-                                <InputGroup
-                                    marginTop="5"
-                                >
-                                    <Input
-                                        bg="#E8E8E8"
-                                        type="number"
-                                        placeholder="Price"
-                                        variant="filled"
-                                        _hover={{ bg: "#E8E8E8" }}
-                                        _focus={{ bg: "#E8E8E8" }}
-                                        _placeholder={{ color: "#707070" }}
-                                        onChange={(e) => setPrice(e.target.value)}
-                                    />
-                                    <InputRightAddon
-                                        background="#000000"
-                                        color="#ffffff"
-                                        children="ETH"
-                                    />
-                                </InputGroup>
-                                <InputGroup
-                                    marginTop="5"
-                                >
-                                    <Input
-                                        bg="#E8E8E8"
-                                        type="number"
-                                        placeholder="Royalty"
-                                        variant="filled"
-                                        _hover={{ bg: "#E8E8E8" }}
-                                        _focus={{ bg: "#E8E8E8" }}
-                                        _placeholder={{ color: "#707070" }}
-                                        onChange={(e) => setPrice(e.target.value)}
-                                    />
-                                    <InputRightAddon
-                                        background="#000000"
-                                        color="#ffffff"
-                                        children="%"
-                                    />
-                                </InputGroup>
-                            </Grid> */}
 
                             <InputGroup
                                 marginTop="5"
@@ -370,7 +327,7 @@ export default function Upload() {
                         </Box>
                     </Box>
                 }
-            </Box>
+            </Box> */}
         </AppLayout>
     )
 }
