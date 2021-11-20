@@ -10,15 +10,15 @@ export default async (req, res) => {
     if(req.method === "POST") {
         const { objekt_contract, signature, string } = req.body;
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyA5TdftdcfvM5gB_eA15rxhiKvYTUj9bnY",
-            authDomain: "kotaru-dev.firebaseapp.com",
-            projectId: "kotaru-dev",
-            storageBucket: "kotaru-dev.appspot.com",
-            messagingSenderId: "59476093214",
-            appId: "1:59476093214:web:e83273da01107e0ca1410f"
+        let firebaseConfig = {
+            apiKey: process.env.FB_API_KEY,
+            authDomain: process.env.AUTH_DOMAIN,
+            projectId: process.env.PROJECT_ID,
+            storageBucket: process.env.STORAGE_BUCKET,
+            messagingSenderId: process.env.MESSAGING_SENDER_ID,
+            appId: process.env.FB_APP_ID
         };
-
+        
         let firebaseApp = initializeApp(firebaseConfig);
         let db = getFirestore();
 

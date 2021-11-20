@@ -49,7 +49,7 @@ export default function Objekt() {
 
     const LoadObjekt = async () => {
         if (id !== undefined && contract !== undefined) {
-            const objekt = await axios.get(`/api/objekt/${id}`);
+            const objekt = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/objekt/get/${id}`);
             const objektData = objekt.data;
 
             const _objektContract = await thirdWeb.getDropModule(objektData.contract_address);
@@ -77,7 +77,7 @@ export default function Objekt() {
                 text: "Preparing NFT..."
             });
 
-            await axios.post(`/api/grantRole`, {
+            await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/role`, {
                 contract_address: objektContractAddress,
                 role: "minter",
                 address: walletState.address,
@@ -121,7 +121,7 @@ export default function Objekt() {
         })
 
         try {
-            let randomStringRes = await axios.get(`/api/randomstring/${walletState.address}`);
+            let randomStringRes = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/random_string/${walletState.address}`);
             let signature = await web3Context.eth.personal.sign(randomStringRes.data.string, walletState.address, "");
 
             setButtonLoading({
@@ -129,7 +129,7 @@ export default function Objekt() {
                 text: "Downloading..."
             })
 
-            let downloadReqRes = await axios.post(`/api/download`, {
+            let downloadReqRes = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/objekt/download`, {
                 signature: signature,
                 objekt_contract: objektContractAddress,
                 string: randomStringRes.data.string

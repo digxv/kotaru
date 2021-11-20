@@ -97,18 +97,13 @@ export default function Sell() {
 
             const { cid } = await ipfs.add(urlSource(`data:application/octet-stream,${encrypted}`));
 
-            let pfObjekt = await axios.post("/api/pinFile", {
+            await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/objekt/pin`, {
                 hash: cid.string
             });
-
-            // let encryptStringRes = await axios.post("/api/encryptString", {
-            //     string: passphrase
-            // });
 
             let value = await web3Context.utils.toWei(price, "ether");
 
             let JSON_meta = {
-                // decryption_key: encryptStringRes.data.encryptedString,
                 encrypted_file_cid: cid.string,
                 payable_address: walletState.address,
                 value: value,
@@ -132,16 +127,11 @@ export default function Sell() {
         try {
             let passphrase = Math.random().toString(36);
 
-            let encrypted = CryptoJS.AES.encrypt(link, passphrase);
-
-            // let encryptStringRes = await axios.post("/api/encryptString", {
-            //     string: passphrase
-            // });
+            let encrypted = CryptoJS.AES.encrypt(link, passphrase);;
 
             let value = await web3Context.utils.toWei(price, "ether");
 
             let JSON_meta = {
-                // decryption_key: encryptStringRes.data.encryptedString,
                 _link: `${encrypted}`,
                 payable_address: walletState.address,
                 value: value,
@@ -169,7 +159,7 @@ export default function Sell() {
             let MetaString = JSON.stringify(meta);
             const { cid } = await ipfs.add(MetaString);
 
-            await axios.post("/api/pinFile", {
+            await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/objekt/pin`, {
                 hash: cid.string
             });
 
@@ -178,7 +168,7 @@ export default function Sell() {
                 text: "Deployment..."
             });
 
-            await axios.post(`/api/grantRole`, {
+            await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/role`, {
                 address: walletState.address,
                 role: "admin",
                 contract_address: `0x2998e811b64c365646818f1e7F8D8333f79f2C1b`
@@ -212,7 +202,7 @@ export default function Sell() {
                 pricePerToken: meta.value
             }]);
 
-            let addReqResponse = await axios.post("/api/add", {
+            let addReqResponse = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/objekt/add`, {
                 name: filename,
                 ipfs_uri: cid.string,
                 decryption_key: decryption_key,
@@ -244,13 +234,13 @@ export default function Sell() {
                 paddingRight={[2, 5, 8]}
                 paddingLeft={[2, 5, 8]}
             >
-                {/* <Box bgColor="green.300" maxWidth="800px" borderRadius="md" p="4" mb="5">
-                    Sellers can enable buyers to hold their tokens to access the product, helping with royalties on resell & many more use-cases.
-                </Box> */}
                 <Box bgColor="green.300" maxWidth="800px" borderRadius="md" p="4" mb="5">
-                    Will be available soon, follow @0xDig on Twitter for updates.
+                    Sellers can enable buyers to hold their tokens to access the product, helping with royalties on resell & many more use-cases.
                 </Box>
-                {/* {
+                {/* <Box bgColor="green.300" maxWidth="800px" borderRadius="md" p="4" mb="5">
+                    Will be available soon, follow @0xDig on Twitter for updates.
+                </Box> */}
+                {
                     ready.success
                     ?
                     <Box marginLeft="auto" marginRight="auto" maxWidth="800px">
@@ -404,7 +394,7 @@ export default function Sell() {
                             </Button>
                         </Box>
                     </Box>
-                } */}
+                }
             </Box>
         </AppLayout>
     )
