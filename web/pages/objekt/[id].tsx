@@ -77,7 +77,7 @@ export default function Objekt() {
                 text: "Preparing NFT..."
             });
 
-            await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/role`, {
+            const roled = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/role`, {
                 contract_address: objektContractAddress,
                 role: "minter",
                 address: walletState.address,

